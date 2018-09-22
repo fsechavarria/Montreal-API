@@ -1,24 +1,39 @@
 import database from '../../database/database'
-import _ from 'lodash'
+import oracledb from 'oracledb'
+
 /**
  * Autenticar a un usuario.
- * @param {string} req.body.email - Correo electrónico del usuario a autenticar.
- * @param {string} req.body.password - Contraseña del usuario a autenticar.
- * @return {json} NADA POR AHORA, SOLO DATOS DE PRUEBA !
+ * @param {string} req.body.usuario - Usuario del usuario a autenticar.
+ * @param {string} req.body.contrasena - Contraseña del usuario a autenticar.
+ * @return {json} - 
  */
 async function authenticate (req, res) {
-  const result = await database.simpleExecute('select email, password from usuario')
-  let u = _.find(result.rows, (user) => {
-    return user.EMAIL === req.body.email && user.PASSWORD === req.body.password
-  })
-
-  if (u) {
-    res.json({ error: false, data: { data: { email: u.EMAIL, password: u.PASSWORD } } })
+  let bindvars = 
+  { 
+    cursor:  { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }
+  }
+  let result = []
+  try {
+    result = await database.executeProcedure('BEGIN SELECTusuario(:cursor); END;', bindvars)
+  } catch (err) {
+    console.error(err.message)
+  }
+  
+  if (result.length > 0) {
+    let usr
+    result.forEach(user => {
+      if (user.USUARIO === req.body.usuario && user.CONTRASENA === req.body.contrasena) {
+        usr = user
+      }
+    })
+    if (usr) {
+      res.json({ error: false, data: { usuario: usr } })
+    } else {
+      res.status(404).json({ error: true, data: { message: 'Usuario o contraseña incorrectos' } })
+    }
   } else {
     res.status(404).json({ error: true, data: { message: 'Usuario o contraseña incorrectos' } })
   }
-  
-  
 }
 
 module.exports = {
