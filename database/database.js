@@ -52,7 +52,14 @@ function simpleExecute(statement, binds = [], opts = {}) {
   })
 }
 
-async function executeProcedure (statement, binds = {}, numRows = 10) {
+/**
+ * Metodo para ejecutar procedimientos almacenados que poseen un SELECT
+ * @param {*} statement - Sentencia SQL para ejecutar el procedimiento
+ * @param {*} binds - Parametros del procedimiento
+ * @param {*} numRows - Cantidad de columnas por resultado (opcional, por defecto 10)
+ * @returns {array} - Arreglo con el resultado del procedimiento.
+ */
+async function executeGETProcedure (statement, binds = {}, numRows = 10) {
   return new Promise(async (resolve, reject) => {
     let connection
 
@@ -61,9 +68,9 @@ async function executeProcedure (statement, binds = {}, numRows = 10) {
       
       await connection.execute(statement, binds, async function (err, result) {
         if (err) {
-          console.error(err.message)
           await connection.close()
           reject(err.message)
+          return
         }
         var metaData = result.outBinds.cursor.metaData
         var resultSet = result.outBinds.cursor
@@ -73,8 +80,37 @@ async function executeProcedure (statement, binds = {}, numRows = 10) {
           resultData = convert(metaData, resultData)
         } catch (err) {
           reject(err)
+          return
         }
         resolve(resultData)
+      })
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
+
+/**
+ * 
+ * @param {*} statement - Sentencia SQL para ejecutar el procedimiento
+ * @param {*} binds - Parametros del procedimiento
+ * @returns {int} - ID del objeto insertado
+ */
+async function executeProcedure (statement, binds = {}) {
+  return new Promise(async (resolve, reject) => {
+    let connection
+
+    try {
+      connection = await oracledb.getConnection()
+      
+      await connection.execute(statement, binds, async function (err, result) {
+        if (err) {
+          await connection.close()
+          reject(err.message)
+          return
+        }
+        await connection.close()
+        resolve(result.outBinds)
       })
     } catch (err) {
       reject(err)
@@ -86,5 +122,6 @@ module.exports = {
   startup,
   close,
   simpleExecute,
+  executeGETProcedure,
   executeProcedure
 }
