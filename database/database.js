@@ -25,6 +25,12 @@ async function close () {
   await oracledb.getPool().close()
 }
 
+/**
+ * Metodo para ejecutar sentencias SQL.
+ * @param {string} statement - Sentencia SQL a ejecutar.
+ * @param {object} binds - Parametros para la sentencia SQL (opcional)
+ * @param {object} opts - Opciones para la ejecución de la sentencia SQL(opcional, por defecto auto commit = true)
+ */
 function simpleExecute(statement, binds = [], opts = {}) {
   return new Promise(async (resolve, reject) => {
     let conn
@@ -54,9 +60,9 @@ function simpleExecute(statement, binds = [], opts = {}) {
 
 /**
  * Metodo para ejecutar procedimientos almacenados que poseen un SELECT
- * @param {*} statement - Sentencia SQL para ejecutar el procedimiento
- * @param {*} binds - Parametros del procedimiento
- * @param {*} numRows - Cantidad de columnas por resultado (opcional, por defecto 10)
+ * @param {string} statement - Sentencia SQL para ejecutar el procedimiento
+ * @param {object} binds - Parametros del procedimiento
+ * @param {int} numRows - Cantidad de columnas por resultado (opcional, por defecto 10)
  * @returns {array} - Arreglo con el resultado del procedimiento.
  */
 async function executeGETProcedure (statement, binds = {}, numRows = 10) {
@@ -91,9 +97,9 @@ async function executeGETProcedure (statement, binds = {}, numRows = 10) {
 }
 
 /**
- * 
- * @param {*} statement - Sentencia SQL para ejecutar el procedimiento
- * @param {*} binds - Parametros del procedimiento
+ * Metodo para ejecutar procedimientos almacenados sin SELECT (Update, Delete, Insert)
+ * @param {string} statement - Sentencia SQL para ejecutar el procedimiento
+ * @param {object} binds - Parametros del procedimiento
  * @returns {int} - ID del objeto insertado
  */
 async function executeProcedure (statement, binds = {}) {
