@@ -9,11 +9,10 @@ import oracledb from 'oracledb'
  */
 async function authenticate (req, res) {
   try {
-    let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT } }
+    let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_usuario: 0 }
     let result = []
-    result = await database.executeGETProcedure('BEGIN SELECTusuario(:cursor); END;', bindvars)
-  
-    if (result.length > 0) {
+    result = await database.executeGETProcedure('BEGIN SELECTusuario(:cursor, :id_usuario); END;', bindvars)
+    if (result && result.length > 0) {
       let usr
       result.forEach(user => {
         if (user.USUARIO === req.body.USUARIO && user.CONTRASENA === req.body.CONTRASENA) {
@@ -30,7 +29,7 @@ async function authenticate (req, res) {
       res.status(404).json({ error: true, data: { message: 'Usuario o contraseña incorrectos' } })
     }
   } catch (err) {
-    res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+    res.status(500).json({ error: true, data: { message: err } })
   }
 }
 
