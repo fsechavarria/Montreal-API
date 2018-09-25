@@ -40,28 +40,38 @@ function doClose(connection, resultSet) {
  * 
  * @param {array} metadata - Arreglo con los nombres de cada columna
  * @param {array} items - Arreglo multidimensional con los valores de cada columna
+ * @param {boolean} single - Define si la funcion trabajará con un resultado de solo una fila. (opcional, por defecto false)
  * @returns {array} - Arreglo con objetos cuyas llaves y valores corresponden a la estructura de la tabla en la Base de datos. 
  * EJ [ { id: 1, nombre: 'nombre' }, { id: 2, nombre: 'nombre2' }... ]
  */
-function convert (metadata, items) {
+function convert (metadata, items, single = false) {
   let newArr = []
-
-  items.forEach(arr => {
-    if (arr.length > 0) {
-      arr.forEach(item => {
-        let obj = {}
-        for (let i = 0; i < item.length; i++) {
-          obj[metadata[i].name] = item[i]
+  if (items.length > 0) {
+    if (!single) {
+      items.forEach(arr => {
+        if (arr.length > 0) {
+          arr.forEach(item => {
+            let obj = {}
+            for (let i = 0; i < item.length; i++) {
+              obj[metadata[i].name] = item[i]
+            }
+            newArr.push(obj)
+          })
         }
-        newArr.push(obj)
       })
+    } else {
+      let obj = {}
+      for (let i = 0; i < items.length; i++) {
+        obj[metadata[i].name] = items[i]
+      }
+      newArr.push(obj)
     }
-  })
-
+  }
   return newArr
 }
 
 module.exports = {
   fetchAsync,
-  convert
+  convert,
+  doClose
 }
