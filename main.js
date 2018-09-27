@@ -19,6 +19,12 @@ const app = express();
 // Middlewares
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use((error, request, response, next) => {
+  if (error !== null) {
+    return response.json({ error: true, data: { message: 'Invalid JSON' } })
+  }
+  return next()
+})
 app.use(morgan('combined')) // Logger por consola, muestra request y response
 
 // Se incluyen las rutas privadas y publicas
