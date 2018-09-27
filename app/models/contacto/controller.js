@@ -11,7 +11,7 @@ async function GET (req, res) {
     let bindvars = { 
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, 
       id_contacto: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-      id_usuario: (typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) ) ? undefined : parseInt(req.query.id_usuario),
+      id_usuario: (typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) || String(req.query.id_usuario).trim().length === 0) ? undefined : parseInt(req.query.id_usuario),
       desc_contacto: (typeof req.query.desc_contacto !== 'string' || req.query.desc_contacto.trim().length === 0) ? undefined : req.query.desc_contacto.trim(),
       tipo_contacto: (typeof req.query.tipo_contacto !== 'string' || req.query.tipo_contacto.trim().length === 0) ? undefined : req.query.tipo_contacto.trim()
     }
@@ -38,9 +38,9 @@ async function POST (req, res) {
   try {
     let bindvars = { 
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) ) ? undefined : req.body.ID_USUARIO,
-      desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO,
-      tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO,
+      id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : req.body.ID_USUARIO,
+      desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO.trim(),
+      tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO.trim(),
     }
     if (bindvars.id_usuario !== undefined && bindvars.desc_contacto !== undefined && bindvars.tipo_contacto !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTcontacto(:cursor, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
@@ -72,9 +72,9 @@ async function PUT (req, res) {
       let bindvars = {
         cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_contacto: id_contacto,
-        id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) ) ? undefined : req.body.ID_USUARIO,
-        desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO,
-        tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO
+        id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : req.body.ID_USUARIO,
+        desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO.trim(),
+        tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO.trim()
       }
       let result = await database.executeProcedure('BEGIN UPDATEcontacto(:cursor, :id_contacto, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {

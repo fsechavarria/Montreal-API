@@ -12,7 +12,7 @@ async function GET (req, res) {
 		let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
 			id_pais: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-			nombre: (typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre
+			nombre: (typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre.trim()
 		}
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTpais(:cursor, :id_pais, :nombre); END;', bindvars)
@@ -35,7 +35,7 @@ async function POST (req, res) {
   try {
     let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-			nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE
+			nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
 		}
     if (bindvars.nombre !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTpais(:cursor, :nombre); END;', bindvars)
@@ -65,7 +65,7 @@ async function PUT (req, res) {
       let bindvars = {
 				cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
 				id_pais: id_pais,
-				nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE
+				nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
 			}
       let result = await database.executeProcedure('BEGIN UPDATEpais(:cursor, :id_pais, :nombre); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
