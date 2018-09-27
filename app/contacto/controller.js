@@ -8,10 +8,15 @@ import oracledb from 'oracledb'
  */
 async function GET (req, res) {
   try {
-    const id_contacto = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-    let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_contacto: id_contacto }
+    let bindvars = { 
+      cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, 
+      id_contacto: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+      id_usuario: (typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) ) ? undefined : parseInt(req.query.id_usuario),
+      desc_contacto: (typeof req.query.desc_contacto !== 'string' || req.query.desc_contacto.trim().length === 0) ? undefined : req.query.desc_contacto.trim(),
+      tipo_contacto: (typeof req.query.tipo_contacto !== 'string' || req.query.tipo_contacto.trim().length === 0) ? undefined : req.query.tipo_contacto.trim()
+    }
     let result = []
-    result = await database.executeGETProcedure('BEGIN SELECTcontacto(:cursor, :id_contacto); END;', bindvars)
+    result = await database.executeGETProcedure('BEGIN SELECTcontacto(:cursor, :id_contacto, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
     if (result.length > 0) {
       res.json({ error: false, data: { contactos: result } })
     } else {
@@ -60,24 +65,18 @@ async function PUT (req, res) {
   try {
     const id_contacto = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_contacto != 0) {
-      let bindAux = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_contacto: id_contacto }
-      let aux = await database.executeGETProcedure('BEGIN SELECTcontacto(:cursor, :id_contacto); END;', bindAux)
-      if (aux && aux.length > 0) {
-        let bindvars = {
-          cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-          id_contacto: id_contacto,
-          id_usuario: (typeof req.body.ID_USUARIO === 'undefined') ? aux[0].ID_USUARIO : req.body.ID_USUARIO,
-          desc_contacto: (typeof req.body.DESC_CONTACTO === 'undefined') ? aux[0].DESC_CONTACTO : req.body.DESC_CONTACTO,
-          tipo_contacto: (typeof req.body.TIPO_CONTACTO === 'undefined') ? aux[0].TIPO_CONTACTO : req.body.TIPO_CONTACTO
-        }
-        let result = await database.executeProcedure('BEGIN UPDATEcontacto(:cursor, :id_contacto, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
-        if (result && result.length > 0) {
-          res.json({ error: false, data: { message: 'Contacto Actualizado', contacto: result[0] } })
-        } else {
-          res.status(404).json({ error: true, data: { message: 'Error Interno' } })
-        }
+      let bindvars = {
+        cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
+        id_contacto: id_contacto,
+        id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) ) ? undefined : req.body.ID_USUARIO,
+        desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO,
+        tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO
+      }
+      let result = await database.executeProcedure('BEGIN UPDATEcontacto(:cursor, :id_contacto, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
+      if (result && result.length > 0 && result.length === 1) {
+        res.json({ error: false, data: { message: 'Contacto Actualizado', contacto: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'No se encontró ningún contacto' } })
+        res.status(404).json({ error: true, data: { message: 'Error Interno' } })
       }
     } else {
       res.status(404).json({ error: true, data: { message: 'No se encontró ningún contacto' } })

@@ -9,22 +9,15 @@ import oracledb from 'oracledb'
  */
 async function authenticate (req, res) {
   try {
-    let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_usuario: 0 }
+    let bindvars = { 
+      cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
+      usuario: (typeof req.body.USUARIO === 'undefined' || req.body.USUARIO.trim().length === 0) ? undefined : String(req.body.USUARIO),
+      contrasena: (typeof req.body.CONTRASENA === 'undefined' || req.body.CONTRASENA.trim().length === 0) ? undefined : String(req.body.CONTRASENA)
+    }
     let result = []
-    result = await database.executeGETProcedure('BEGIN SELECTusuario(:cursor, :id_usuario); END;', bindvars)
-    if (result && result.length > 0) {
-      let usr
-      result.forEach(user => {
-        if (user.USUARIO === req.body.USUARIO && user.CONTRASENA === req.body.CONTRASENA) {
-          usr = user
-          return
-        }
-      })
-      if (usr) {
-        res.json({ error: false, data: { usuario: usr } })
-      } else {
-        res.status(404).json({ error: true, data: { message: 'Usuario o contraseña incorrectos' } })
-      }
+    result = await database.executeGETProcedure('BEGIN AUTHusuario(:cursor, :usuario, :contrasena); END;', bindvars)
+    if (result && result.length === 1) {
+      res.json({ error: false, data: { usuario: result[0] } })
     } else {
       res.status(404).json({ error: true, data: { message: 'Usuario o contraseña incorrectos' } })
     }
