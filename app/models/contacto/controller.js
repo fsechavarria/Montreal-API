@@ -18,12 +18,12 @@ async function GET (req, res) {
     let result = []
     result = await database.executeGETProcedure('BEGIN SELECTcontacto(:cursor, :id_contacto, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
     if (result.length > 0) {
-      res.json({ error: false, data: { contactos: result } })
+      res.json({ error: false, data: { contacto: result } })
     } else {
       res.status(404).json({ error: true, data: { message: 'No se encontró ningún contacto.' } })
     }
   } catch (err) {
-    res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+    res.status(500).json({ error: true, data: { message: err } })
   }
 }
 
@@ -38,18 +38,22 @@ async function POST (req, res) {
   try {
     let bindvars = { 
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_usuario: req.body.ID_USUARIO,
-      desc_contacto: req.body.DESC_CONTACTO,
-      tipo_contacto: req.body.TIPO_CONTACTO,
+      id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) ) ? undefined : req.body.ID_USUARIO,
+      desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO,
+      tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO,
     }
-    let result = await database.executeProcedure('BEGIN INSERTcontacto(:cursor, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
-    if (result && result.length > 0) {
-      res.json({ error: false, data: { contacto: result[0] } })
+    if (bindvars.id_usuario !== undefined && bindvars.desc_contacto !== undefined && bindvars.tipo_contacto !== undefined) {
+      let result = await database.executeProcedure('BEGIN INSERTcontacto(:cursor, :id_usuario, :desc_contacto, :tipo_contacto); END;', bindvars)
+      if (result && result.length > 0) {
+        res.json({ error: false, data: { contacto: result[0] } })
+      } else {
+        res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+      }
     } else {
-      res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+      res.status(400).json({ error: true, data: { message: 'Parámetros Inválidos' } })
     }
   } catch (err) {
-    res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+    res.status(500).json({ error: true, data: { message: err } })
   }
 }
 
@@ -76,7 +80,7 @@ async function PUT (req, res) {
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Contacto Actualizado', contacto: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'Error Interno' } })
+        res.status(500).json({ error: true, data: { message: 'No se encontró ningún contacto' } })
       }
     } else {
       res.status(404).json({ error: true, data: { message: 'No se encontró ningún contacto' } })
@@ -106,7 +110,7 @@ async function DELETE (req, res) {
       res.status(404).json({ error: true, data: { message: 'No se encontró ningún contacto' } })
     }
   } catch (err) {
-    res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+    res.status(500).json({ error: true, data: { message: err } })
   }
 }
 
