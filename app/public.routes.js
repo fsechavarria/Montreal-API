@@ -6,6 +6,7 @@ import routesCiudad from './models/ciudad/public.routes'
 import routesDireccion from './models/direccion/public.routes'
 import routesRol from './models/rol/public.routes'
 import routesUsuario from './models/usuario/public.routes'
+import routesFamilia from './models/familia/public.routes'
 
 const routes = [
   routesInicio,
@@ -15,7 +16,8 @@ const routes = [
   routesCiudad,
   routesDireccion,
   routesRol,
-  routesUsuario
+  routesUsuario,
+  routesFamilia
 ]
 
 export default routes
