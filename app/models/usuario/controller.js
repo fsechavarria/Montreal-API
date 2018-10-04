@@ -1,5 +1,6 @@
 import database from '../../../database/database'
 import oracledb from 'oracledb'
+import { genHash } from '../../autenticacion/_helpers'
 
 /**
  * Obtener Usuarios
@@ -63,6 +64,7 @@ async function POST (req, res) {
     if (bindvars.id_rol !== undefined && bindvars.id_direccion !== undefined && bindvars.usuario !== undefined
         && bindvars.contrasena !== undefined && bindvars.nombre !== undefined && bindvars.app_paterno !== undefined
           && bindvars.app_materno !== undefined) {
+      bindvars.contrasena = genHash(bindvars.contrasena)
       let result = await database.executeProcedure('BEGIN INSERTusuario(:cursor, :id_rol, :id_direccion, :usuario, :contrasena, :nombre, :app_paterno, :app_materno); END;', bindvars)
       if (result && result.length > 0) {
         res.json({ error: false, data: { usuario: result[0] } })
