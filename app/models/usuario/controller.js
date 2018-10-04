@@ -106,6 +106,7 @@ async function PUT (req, res) {
         app_paterno: (typeof req.body.APP_PATERNO !== 'string' || req.body.APP_PATERNO.trim().length === 0) ? undefined : req.body.APP_PATERNO.trim(),
         app_materno: (typeof req.body.APP_MATERNO !== 'string' || req.body.APP_MATERNO.trim().length === 0) ? undefined : req.body.APP_MATERNO.trim()
       }
+      if (bindvars.contrasena) bindvars.contrasena = genHash(bindvars.contrasena)
       let result = await database.executeProcedure('BEGIN UPDATEusuario(:cursor, :id_usuario, :id_rol, :id_direccion, :usuario, :contrasena, :nombre, :app_paterno, :app_materno); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Usuario Actualizado', usuario: result[0] } })
