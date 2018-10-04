@@ -49,7 +49,7 @@ async function POST (req, res) {
       res.status(400).json({ error: true, data: { message: 'El estado debe ser "A" o "I"' } })
       return
     }
-    if (bindvars.estado !== undefined && bindvars.estado !== 'A' && bindvars.estado !== 'I') {
+    if (bindvars.estado !== undefined && bindvars.estado !== 'A' && bindvars.estado !== 'I' && bindvars.id_usuario !== undefined && bindvars.num_integrantos !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTfamilia(:cursor, :id_usuario, :num_integrantes, :estado); END;', bindvars)
       if (result && result.length > 0) {
         res.json({ error: false, data: { familia: result[0] } })
