@@ -10,6 +10,7 @@ ___________________________________________________________________________
 | ├── app
 |     ├── _inicio
 |     ├── autenticacion
+|     ├── middleware
 |     ├── models
 |     ├── private.routes.js
 |     ├── public.routes.js
