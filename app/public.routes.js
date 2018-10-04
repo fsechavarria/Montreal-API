@@ -9,6 +9,7 @@ import routesUsuario from './models/usuario/public.routes'
 import routesFamilia from './models/familia/public.routes'
 import routesCem from './models/cem/public.routes'
 import routesCel from './models/cel/public.routes'
+import routesAlumno from './models/alumno/public.routes'
 
 const routes = [
   routesInicio,
@@ -21,7 +22,8 @@ const routes = [
   routesUsuario,
   routesFamilia,
   routesCem,
-  routesCel
+  routesCel,
+  routesAlumno
 ]
 
 export default routes
