@@ -3,7 +3,10 @@ import oracledb from 'oracledb'
 
 /**
  * Obtener Contactos
- * @param {integer} req.params.id - ID del contacto (opcional).
+ * @param {integer} req.params.id - ID del contacto. (Opcional)
+ * @param {integer} req.query.id_usuario - ID del usuario al que pertenece el contacto. (Opcional)
+ * @param {string} req.query.desc_contacto - Descripción del contacto. (Opcional)
+ * @param {string} req.query.tipo_contacto - Tipo de contacto. (Opcional)
  * @returns {json} - Contacto(s) encontrado(s). De lo contrario mensaje de error.
  */
 async function GET (req, res) {
