@@ -45,11 +45,11 @@ async function POST (req, res) {
       num_integrantes: (typeof req.body.NUM_INTEGRANTES === 'undefined' || isNaN(req.body.NUM_INTEGRANTES) || String(req.body.NUM_INTEGRANTES).trim().length === 0) ? undefined : parseInt(req.body.NUM_INTEGRANTES),
       estado: (typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? 'A' : req.body.ESTADO.trim().toUpperCase()
     }
-    if (req.body.ESTADO.trim() !== 'A' && req.body.ESTADO.trim() !== 'I') {
-      res.status(400).json({ error: true, data: { message: 'El estado debe ser "A" o "I"' } })
+    if (bindvars.estado !== 'A' && bindvars.estado !== 'I') {
+      res.status(400).json({ error: true, data: { message: 'El estado debe ser Activo[A] o Inactivo[I]' } })
       return
     }
-    if (bindvars.estado !== undefined && bindvars.estado !== 'A' && bindvars.estado !== 'I' && bindvars.id_usuario !== undefined && bindvars.num_integrantes !== undefined) {
+    if (bindvars.estado !== undefined && bindvars.id_usuario !== undefined && bindvars.num_integrantes !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTfamilia(:cursor, :id_usuario, :num_integrantes, :estado); END;', bindvars)
       if (result && result.length > 0) {
         res.json({ error: false, data: { familia: result[0] } })
@@ -84,7 +84,7 @@ async function PUT (req, res) {
         estado: (typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? undefined : req.body.ESTADO.trim().toUpperCase()
       }
       if (bindvars.estado !== undefined && bindvars.estado !== 'A' && bindvars.estado !== 'I') {
-        res.status(400).json({ error: true, data: { message: 'El estado debe ser "A" o "I"' } })
+        res.status(400).json({ error: true, data: { message: 'El estado debe ser Activo[A] o Inactivo[I]' } })
         return
       }
       let result = await database.executeProcedure('BEGIN UPDATEfamilia(:cursor, :id_familia, :id_usuario, :num_integrantes, :estado); END;', bindvars)
