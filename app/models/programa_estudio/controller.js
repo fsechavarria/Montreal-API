@@ -4,7 +4,7 @@ import { formatDate } from '../_helpers'
 
 /**
  * Obtener Programas de Estudio
- * @param {integer} req.params.id - ID del rol. (Opcional) 
+ * @param {integer} req.params.id - ID del programa de estudio. (Opcional) 
  * @param {integer} req.query.id_cem - ID del CEM dueño del programa. (Opcional)
  * @param {integer} req.query.id_cel - ID del CEL que se ofrece para el programa. (Opcional)
  * @param {string} req.query.nomb_programa - Nombre del programa de estudio. (Opcional)
