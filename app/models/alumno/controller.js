@@ -106,7 +106,7 @@ async function DELETE (req, res) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_alumno: id_alumno }
       let result = await database.executeProcedure('BEGIN DELETEalumno(:cursor, :id_alumno); END;', bindvars)
       if (result && result.length > 0) {
-        res.json({ error: false, data: { message: 'Aulmno Eliminado', alumno: result[0] } })
+        res.json({ error: false, data: { message: 'Alumno Eliminado', alumno: result[0] } })
       } else {
         res.status(404).json({ error: true, data: { message: 'No se encontró ningún alumno' } })
       }
