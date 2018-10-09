@@ -1,7 +1,6 @@
 'use strict'
 
 let SECRET
-let SECRET_ENCRYPT
 let API_PORT
 let API_HOST
 let DB_USER
@@ -12,7 +11,6 @@ const env = process.env.NODE_ENV || 'development'
 switch (env) {
   case 'production':
     SECRET = process.env.SECRET
-    SECRET_ENCRYPT = process.env.SECRET_ENCRYPT
 
     API_PORT = process.env.API_PORT
     API_HOST = process.env.API_HOST
@@ -24,7 +22,6 @@ switch (env) {
     break
   case 'development':
     SECRET = 'montrealSTJwt'
-    SECRET_ENCRYPT = 'montrealSTEncrypt'
 
     API_PORT = '3000'
     API_HOST = 'http://localhost'
@@ -44,6 +41,5 @@ module.exports = {
   DB_USER,
   DB_PASSWORD,
   DB_CONNECTIONSTRING,
-  SECRET,
-  SECRET_ENCRYPT
+  SECRET
 }
