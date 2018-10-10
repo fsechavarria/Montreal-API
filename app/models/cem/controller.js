@@ -3,7 +3,7 @@ import oracledb from 'oracledb'
 
 /**
  * Obtener CEMs
- * @param {integer} req.params.id - ID de la Ciudad. (Opcional) 
+ * @param {integer} req.params.id - ID del CEM. (Opcional) 
  * @param {integer} req.query.id_usuario - ID del usuario al que pertenece el CEM. (Opcional)
  * @param {string} req.query.nom_centro - Nombre del CEM. (Opcional)
  * @returns {json} - Objeto con los CEM encontrados.

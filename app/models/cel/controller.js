@@ -3,7 +3,7 @@ import oracledb from 'oracledb'
 
 /**
  * Obtener CELs
- * @param {integer} req.params.id - ID de la Ciudad. (Opcional) 
+ * @param {integer} req.params.id - ID del CEL. (Opcional) 
  * @param {integer} req.query.id_usuario - ID del usuario al que pertenece el CEL. (Opcional)
  * @param {string} req.query.nom_centro - Nombre del CEL. (Opcional)
  * @returns {json} - Objeto con los CEL encontrados.

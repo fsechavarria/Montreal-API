@@ -8,7 +8,7 @@ import oracledb from 'oracledb'
  * @param {integer} req.query.id_curso - ID del curso al que pertenece la calificación. (Opcional)
  * @param {string} req.query.desc_calificacion - Descripción del seguro. (Opcional)
  * @param {double} req.query.nota - Calificación. (Rango de 1.0 a 7.0) (Opcional)
- * @returns {json} - Objeto con las notas encontradas.
+ * @returns {json} - Objeto con las calificaciones encontradas.
  */
 async function GET (req, res) {
 	try {
@@ -38,7 +38,7 @@ async function GET (req, res) {
  * @param {integer} req.body.ID_CURSO - ID del curso al que pertenece la calificación
  * @param {string} req.body.DESC_CALIFICACION - Descripción del seguro. (Opcional, por defecto null)
  * @param {double} req.body.NOTA - Calificación. (Rango de 1.0 a 7.0).
- * @returns {json} - Objeto con el seguro ingresado.
+ * @returns {json} - Objeto con la calificacion ingresada.
  */
 async function POST (req, res) {
   try {

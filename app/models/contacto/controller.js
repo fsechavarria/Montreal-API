@@ -4,7 +4,7 @@ import oracledb from 'oracledb'
 /**
  * Obtener Contactos
  * @param {integer} req.params.id - ID del contacto. (Opcional)
- * @param {integer} req.query.id_persona - ID del usuario al que pertenece el contacto. (Opcional)
+ * @param {integer} req.query.id_persona - ID de la persona a la que pertenece el contacto. (Opcional)
  * @param {string} req.query.desc_contacto - Descripción del contacto. (Opcional)
  * @param {string} req.query.tipo_contacto - Tipo de contacto. (Opcional)
  * @returns {json} - Contacto(s) encontrado(s). De lo contrario mensaje de error.
@@ -32,7 +32,7 @@ async function GET (req, res) {
 
 /**
  * Insertar Contacto
- * @param {integer} req.body.ID_PERSONA - ID del usuario a quien pertenecerá el contacto.
+ * @param {integer} req.body.ID_PERSONA - ID de la persona a quien pertenecerá el contacto.
  * @param {string} req.body.DESC_CONTACTO - La Descripción del contacto.
  * @param {string} req.body.TIPO_CONTACTO - El Tipo de contacto.
  * @returns {json} - Todos los datos del contacto insertado. De lo contrario mensaje de error.
