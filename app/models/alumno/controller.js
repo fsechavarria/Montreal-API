@@ -1,6 +1,5 @@
 import database from '../../../database/database'
 import oracledb from 'oracledb'
-import { formatDate } from '../_helpers'
 
 /**
  * Obtener Alumnos
