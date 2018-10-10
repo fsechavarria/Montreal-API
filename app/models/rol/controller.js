@@ -19,7 +19,7 @@ async function GET (req, res) {
 		if (result.length > 0) {
       res.json({ error: false, data: { rol: result } })
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún rol.' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún rol.' } })
     }
 	} catch (err) {
 		res.status(500).json({ error: true, data: { message: err } })
@@ -71,10 +71,10 @@ async function PUT (req, res) {
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Rol Actualizado', rol: result[0] } })
       } else {
-        res.status(500).json({ error: true, data: { message: 'No se encontró ningún rol' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún rol' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún rol' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún rol' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
@@ -95,10 +95,10 @@ async function DELETE (req, res) {
       if (result && result.length > 0) {
         res.json({ error: false, data: { message: 'Rol Eliminado', rol: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'No se encontró ningún rol' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún rol' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún rol' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún rol' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })

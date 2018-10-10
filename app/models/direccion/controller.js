@@ -25,7 +25,7 @@ async function GET (req, res) {
 		if (result.length > 0) {
       res.json({ error: false, data: { direccion: result } })
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ninguna dirección.' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ninguna dirección.' } })
     }
 	} catch (err) {
 		res.status(500).json({ error: true, data: { message: err } })
@@ -89,10 +89,10 @@ async function PUT (req, res) {
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Dirección Actualizada', direccion: result[0] } })
       } else {
-        res.status(500).json({ error: true, data: { message: 'No se encontró ninguna dirección' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ninguna dirección' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ninguna dirección' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ninguna dirección' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
@@ -113,10 +113,10 @@ async function DELETE (req, res) {
       if (result && result.length > 0) {
         res.json({ error: false, data: { message: 'Dirección Eliminada', direccion: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'No se encontró ninguna dirección' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ninguna dirección' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ninguna dirección' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ninguna dirección' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })

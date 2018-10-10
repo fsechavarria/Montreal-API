@@ -25,7 +25,7 @@ async function GET (req, res) {
 		if (result.length > 0) {
       res.json({ error: false, data: { calificacion: result } })
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ninguna calificacion.' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ninguna calificacion.' } })
     }
 	} catch (err) {
 		res.status(500).json({ error: true, data: { message: err } })
@@ -97,10 +97,10 @@ async function PUT (req, res) {
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Calificación Actualizada', calificacion: result[0] } })
       } else {
-        res.status(500).json({ error: true, data: { message: 'No se encontró ninguna calificación' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ninguna calificación' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ninguna calificación' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ninguna calificación' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
@@ -121,10 +121,10 @@ async function DELETE (req, res) {
       if (result && result.length > 0) {
         res.json({ error: false, data: { message: 'Calificación Eliminada', calificacion: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'No se encontró ninguna calificación' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ninguna calificación' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ninguna calificación' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ninguna calificación' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })

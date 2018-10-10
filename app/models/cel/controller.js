@@ -21,7 +21,7 @@ async function GET (req, res) {
 		if (result.length > 0) {
       res.json({ error: false, data: { cel: result } })
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún CEL.' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún CEL.' } })
     }
 	} catch (err) {
 		res.status(500).json({ error: true, data: { message: err } })
@@ -77,10 +77,10 @@ async function PUT (req, res) {
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'CEL Actualizado', cel: result[0] } })
       } else {
-        res.status(500).json({ error: true, data: { message: 'No se encontró ningún CEL' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún CEL' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún CEL' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún CEL' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
@@ -101,10 +101,10 @@ async function DELETE (req, res) {
       if (result && result.length > 0) {
         res.json({ error: false, data: { message: 'CEL Eliminado', cel: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'No se encontró ningún CEL' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún CEL' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún CEL' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún CEL' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })

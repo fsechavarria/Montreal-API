@@ -24,7 +24,7 @@ async function GET (req, res) {
 		if (result.length > 0) {
       res.json({ error: false, data: { curso: result } })
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún curso.' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún curso.' } })
     }
 	} catch (err) {
 		res.status(500).json({ error: true, data: { message: err } })
@@ -84,10 +84,10 @@ async function PUT (req, res) {
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Curso Actualizado', curso: result[0] } })
       } else {
-        res.status(500).json({ error: true, data: { message: 'No se encontró ningún curso' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún curso' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún curso' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún curso' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
@@ -108,10 +108,10 @@ async function DELETE (req, res) {
       if (result && result.length > 0) {
         res.json({ error: false, data: { message: 'Curso Eliminado', curso: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'No se encontró ningún curso' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún curso' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún curso' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún curso' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })

@@ -26,7 +26,7 @@ async function GET (req, res) {
 		if (result.length > 0) {
       res.json({ error: false, data: { seguro: result } })
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún seguro.' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún seguro.' } })
     }
 	} catch (err) {
 		res.status(500).json({ error: true, data: { message: err } })
@@ -93,10 +93,10 @@ async function PUT (req, res) {
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Seguro Actualizado', seguro: result[0] } })
       } else {
-        res.status(500).json({ error: true, data: { message: 'No se encontró ningún seguro' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún seguro' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún seguro' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún seguro' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
@@ -117,10 +117,10 @@ async function DELETE (req, res) {
       if (result && result.length > 0) {
         res.json({ error: false, data: { message: 'Seguro Eliminado', seguro: result[0] } })
       } else {
-        res.status(404).json({ error: true, data: { message: 'No se encontró ningún seguro' } })
+        res.status(404).json({ error: false, data: { message: 'No se encontró ningún seguro' } })
       }
     } else {
-      res.status(404).json({ error: true, data: { message: 'No se encontró ningún seguro' } })
+      res.status(404).json({ error: false, data: { message: 'No se encontró ningún seguro' } })
     }
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
