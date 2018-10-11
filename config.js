@@ -1,5 +1,6 @@
 'use strict'
 
+
 let SECRET
 let API_PORT
 let API_HOST
@@ -7,7 +8,10 @@ let DB_USER
 let DB_PASSWORD
 let DB_CONNECTIONSTRING
 let MAIL
-let MAIL_PW
+let CLIENT_ID
+let CLIENT_SECRET
+let REFRESH_TOKEN
+// Get refresh token from https://developers.google.com/oauthplayground/
 const env = process.env.NODE_ENV || 'development'
 
 switch (env) {
@@ -22,7 +26,9 @@ switch (env) {
     DB_CONNECTIONSTRING = process.env.DB_CONNECTIONSTRING
 
     MAIL = process.env.MAIL
-    MAIL_PW = process.env.MAIL_PW
+    CLIENT_ID = process.env.CLIENT_ID
+    CLIENT_SECRET = process.env.CLIENT_SECRET
+    REFRESH_TOKEN = process.env.REFRESH_TOKEN
 
     break
   case 'development':
@@ -36,7 +42,9 @@ switch (env) {
     DB_CONNECTIONSTRING = '0.0.0.0/XE'
 
     MAIL = 'montrealtest18@gmail.com'
-    MAIL_PW = 'montreal1324'
+    CLIENT_ID = '423410269520-6et5dscmsbo9bgsdchl8c1vpqoems5gv.apps.googleusercontent.com'
+    CLIENT_SECRET = 'pFvuRmbV6Gcvr8KIgTAut0Vt'
+    REFRESH_TOKEN = '1/IvgNNTsoBnr1ee82_gzNWoc7rlgRz_IwkJqEPezIkbQ'
 
     break;
   default:
@@ -51,5 +59,7 @@ module.exports = {
   DB_CONNECTIONSTRING,
   SECRET,
   MAIL,
-  MAIL_PW
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REFRESH_TOKEN
 }

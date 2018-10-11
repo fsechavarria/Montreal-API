@@ -2,14 +2,19 @@ import nodemailer from 'nodemailer'
 import config from '../../../config'
 
 let transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  service: 'gmail',
+  scope:'https://www.googleapis.com/auth/gmail.send',
   auth: {
+    type: 'oauth2',
     user: config.MAIL,
-    pass: config.MAIL_PW
+    clientId: config.CLIENT_ID,
+    clientSecret: config.CLIENT_SECRET,
+    refreshToken: config.REFRESH_TOKEN
+  },
+  tls: {
+    rejectUnauthorized: false
   }
-})
+}) 
 
 function send (req, res) {
   transporter.sendMail({
