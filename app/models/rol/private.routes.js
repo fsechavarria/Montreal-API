@@ -4,7 +4,7 @@ import permit from '../../middlewares/permissions'
 
 const app = express()
 
-app.route('/usuario/:id([0-9]+)?')
+app.route('/rol/:id([0-9]+)?')
   .get(permit(), (req, res) => controller.GET(req, res))
   .post(permit(), (req, res) => controller.POST(req, res))
   .put(permit(), (req, res) => controller.PUT(req, res))

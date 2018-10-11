@@ -80,7 +80,7 @@ async function PUT (req, res) {
         usuario: (typeof req.body.USUARIO === 'undefined' || String(req.body.USUARIO).trim().length === 0) ? undefined : String(req.body.USUARIO).trim(),
         contrasena: (typeof req.body.CONTRASENA === 'undefined' || String(req.body.CONTRASENA).trim().length === 0) ? undefined : String(req.body.CONTRASENA).trim()
       }
-      if (typeof bindvars.contrasena === 'undefined') bindvars.contrasena = genHash(bindvars.contrasena)
+      if (typeof bindvars.contrasena !== 'undefined') bindvars.contrasena = genHash(bindvars.contrasena)
       let result = await database.executeProcedure('BEGIN UPDATEusuario(:cursor, :id_usuario, :id_rol, :usuario, :contrasena); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Usuario Actualizado', usuario: result[0] } })
