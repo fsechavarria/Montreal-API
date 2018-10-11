@@ -17,6 +17,8 @@ import routesCurso from './models/curso/public.routes'
 import routesCalificacion from './models/calificacion/public.routes'
 import routesPersona from './models/persona/public.routes'
 import routesInscripcion from './models/inscripcion_alumno/public.routes'
+import routesAntecedente from './models/antecedente/public.routes'
+import routesCorreo from './models/email/public.routes'
 
 const routes = [
   routesInicio,
@@ -37,7 +39,9 @@ const routes = [
   routesCurso,
   routesCalificacion,
   routesPersona,
-  routesInscripcion
+  routesInscripcion,
+  routesAntecedente,
+  routesCorreo
 ]
 
 export default routes
