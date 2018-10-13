@@ -33,10 +33,10 @@ function send (req, res) {
 
 function sendWithAttachment(options, req, res) {
   transporter.sendMail({
-    from: 'delbarriotest@gmail.com',
-    to: options.to,
-    subject: options.subject,
-    text: options.text,
+    from: config.MAIL,
+    to: options.TO,
+    subject: options.SUBJECT,
+    text: options.TEXT,
     attachments: [
       {
         filename: options.fileName,

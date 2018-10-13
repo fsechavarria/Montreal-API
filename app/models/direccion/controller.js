@@ -19,8 +19,8 @@ async function GET (req, res) {
       calle: (typeof req.query.calle !== 'string' || req.query.calle.trim().length === 0) ? undefined : req.query.calle.trim(),
       numeracion: (typeof req.query.numeracion === 'undefined' || String(req.query.numeracion).trim().length === 0) ? undefined : String(req.query.numeracion).trim(),
       departamento: (typeof req.query.departamento === 'undefined' || String(req.query.departamento).trim().length === 0) ? undefined : String(req.query.departamento).trim()
-		}
-		let result = []
+    }
+    let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTdireccion(:cursor, :id_direccion, :id_ciudad, :calle, :numeracion, :departamento); END;', bindvars)
 		if (result.length > 0) {
       res.json({ error: false, data: { direccion: result } })

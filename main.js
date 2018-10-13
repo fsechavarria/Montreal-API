@@ -47,6 +47,13 @@ app.use((error, request, response, next) => {
 app.use(passport.initialize())
 app.use(morgan('combined')) // Logger por consola, muestra request y response
 
+// Solo para testing!
+app.use((req, res, next) => {
+  console.log(req.headers)
+  console.log(req.body)
+  next()
+})
+
 // Se incluyen las rutas privadas y publicas
 // a las rutas del servidor
 publicRoutes.map (p => app.use('/', cors(corsOptions), p))

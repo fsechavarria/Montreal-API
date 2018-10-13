@@ -32,7 +32,7 @@ async function GET (req, res) {
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTprograma(:cursor, :id_programa, :id_cem, :id_cel, :nomb_programa, :desc_programa, :fech_inicio, :fech_termino, :cant_min_alumnos, :cant_max_alumnos); END;', bindvars)
 		if (result.length > 0) {
-      res.json({ error: false, data: { programa_estudio: result } })
+      res.json({ error: false, data: { programa: result } })
     } else {
       res.status(404).json({ error: false, data: { message: 'No se encontró ningún programa de estudio.' } })
     }
@@ -71,7 +71,7 @@ async function POST (req, res) {
           bindvars.fech_termino !== undefined && bindvars.cant_min_alumnos !== undefined && bindvars.cant_max_alumnos !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTprograma(:cursor, :id_cem, :id_cel, :nomb_programa, :desc_programa, :fech_inicio, :fech_termino, :cant_min_alumnos, :cant_max_alumnos); END;', bindvars)
       if (result && result.length > 0) {
-        res.json({ error: false, data: { programa_estudio: result[0] } })
+        res.json({ error: false, data: { programa: result[0] } })
       } else {
         res.status(500).json({ error: true, data: { message: 'Error Interno' } })
       }
@@ -114,7 +114,7 @@ async function PUT (req, res) {
       }
       let result = await database.executeProcedure('BEGIN UPDATEprograma(:cursor, :id_programa, :id_cem, :id_cel, :nomb_programa, :desc_programa, :fech_inicio, :fech_termino, :cant_min_alumnos, :cant_max_alumnos); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
-        res.json({ error: false, data: { message: 'Programa de estudio Actualizado', programa_estudio: result[0] } })
+        res.json({ error: false, data: { message: 'Programa de estudio Actualizado', programa: result[0] } })
       } else {
         res.status(404).json({ error: false, data: { message: 'No se encontró ningún programa de estudio' } })
       }
@@ -138,7 +138,7 @@ async function DELETE (req, res) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_programa: id_programa }
       let result = await database.executeProcedure('BEGIN DELETEprograma(:cursor, :id_programa); END;', bindvars)
       if (result && result.length > 0) {
-        res.json({ error: false, data: { message: 'Programa de estudio Eliminado', programa_estudio: result[0] } })
+        res.json({ error: false, data: { message: 'Programa de estudio Eliminado', programa: result[0] } })
       } else {
         res.status(404).json({ error: false, data: { message: 'No se encontró ningún programa de estudio' } })
       }
