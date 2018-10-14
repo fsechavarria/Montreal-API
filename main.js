@@ -49,8 +49,8 @@ app.use(morgan('combined')) // Logger por consola, muestra request y response
 
 // Solo para testing!
 app.use((req, res, next) => {
-  console.log(req.headers)
-  console.log(req.body)
+  console.log('headers ', req.headers)
+  console.log('body ', req.body) 
   next()
 })
 
