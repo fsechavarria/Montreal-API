@@ -33,7 +33,6 @@ async function GET (req, res) {
  * Ingresar Usuario
  * @param {integer} req.body.ID_ROL - ID del rol del usuario.
  * @param {string} req.body.USUARIO - Usuario(login) del usuario.
- * @param {string} req.body.NOMBRE - Nombre del usuario.
  * @param {string} req.body.CONTRASENA - Contraseña del usuario.
  * @returns {json} - Objeto con el usuario ingresado.
  */
