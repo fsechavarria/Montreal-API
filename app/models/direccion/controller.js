@@ -83,8 +83,8 @@ async function PUT (req, res) {
         id_ciudad: (typeof req.body.ID_CIUDAD === 'undefined' || isNaN(req.body.ID_CIUDAD) || String(req.body.ID_CIUDAD).trim().length === 0) ? undefined : parseInt(req.body.ID_CIUDAD),
         calle: (typeof req.body.CALLE !== 'string' || req.body.CALLE.trim().length === 0) ? undefined : req.body.CALLE.trim(),
         numeracion: (typeof req.body.NUMERACION === 'undefined' || String(req.body.NUMERACION).trim().length === 0) ? undefined : String(req.body.NUMERACION).trim(),
-        departamento: (typeof req.body.DEPARTAMENTO === 'undefined' || String(req.body.DEPARTAMENTO).trim().length === 0) ? undefined : String(req.body.DEPARTAMENTO).trim()
-			}
+        departamento: (typeof req.body.DEPARTAMENTO === 'undefined' || String(req.body.DEPARTAMENTO).trim().length === 0) ? '' : String(req.body.DEPARTAMENTO).trim()
+      }
       let result = await database.executeProcedure('BEGIN UPDATEdireccion(:cursor, :id_direccion, :id_ciudad, :calle, :numeracion, :departamento); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
         res.json({ error: false, data: { message: 'Dirección Actualizada', direccion: result[0] } })
