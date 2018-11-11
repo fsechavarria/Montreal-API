@@ -1,5 +1,6 @@
 import database from '../../../database/database'
 import oracledb from 'oracledb'
+import { upload, deleteFile } from './_helpers'
 
 /**
  * Obtener Antecedentes
@@ -33,28 +34,59 @@ async function GET (req, res) {
 /**
  * Ingresar Antecedente
  * @param {integer} req.body.ID_FAMILIA - ID de la familia asociada al antecedente.
- * @param {integer} req.body.URL_ANTECEDENTE - URL del antecedente (Ruta en el fichero).
  * @param {string} req.body.DESC_ANTECEDENTE - Descripción del antecedente.
  * @returns {json} - Objeto con el antecedente ingresado.
  */
-async function POST (req, res) {
+function POST (req, res) {
   try {
-    let bindvars = {
-			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_familia: (typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA),
-      url_antecedente: (typeof req.body.URL_ANTECEDENTE !== 'string' || req.body.URL_ANTECEDENTE.trim().length === 0) ? undefined : req.body.URL_ANTECEDENTE.trim(),
-      desc_antecedente: (typeof req.body.DESC_ANTECEDENTE !== 'string' || req.body.DESC_ANTECEDENTE.trim().length === 0) ? undefined : req.body.DESC_ANTECEDENTE.trim()
-		}
-    if (bindvars.id_familia !== undefined && bindvars.url_antecedente !== undefined && bindvars.desc_antecedente !== undefined) {
-      let result = await database.executeProcedure('BEGIN INSERTantecedente(:cursor, :id_familia, :url_antecedente, :desc_antecedente); END;', bindvars)
-      if (result && result.length > 0) {
-        res.json({ error: false, data: { antecedente: result[0] } })
+    upload(req, res, async err => {
+      if (req.file) {
+        if (err) {
+          res.status(400).json({ error: true, data: { message: err }})
+        } else {
+          let id_familia = (typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA)
+          if (id_familia === undefined) {
+            res.status(400).json({ error: true, data: { message: 'Parámetros Inválidos' } })
+            return
+          }
+          let bindvar_check = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_familia: id_familia, id_antecedente: undefined, url_antecedente: undefined, desc_antecedente: undefined }
+          let deleted = false
+
+          let check = await database.executeGETProcedure('BEGIN SELECTantecedente(:cursor, :id_antecedente, :id_familia, :url_antecedente, :desc_antecedente); END;', bindvar_check)
+          if (check !== undefined && check.length > 0) {
+            let path = 'public' + check[0].URL_ANTECEDENTE
+            bindvar_check.id_antecedente = check[0].ID_ANTECEDENTE
+            deleteFile(path)
+            deleted = true
+          }
+          let bindvars = {
+            cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
+            id_familia: id_familia,
+            desc_antecedente: (typeof req.body.DESC_ANTECEDENTE !== 'string' || req.body.DESC_ANTECEDENTE.trim().length === 0) ? undefined : req.body.DESC_ANTECEDENTE.trim()
+          }
+          bindvars.url_antecedente = '/antecedentes/' + req.file.filename
+          if (bindvars.desc_antecedente !== undefined && bindvars.url_antecedente !== undefined) {
+            let result = []
+            if (!deleted) {
+              result = await database.executeProcedure('BEGIN INSERTantecedente(:cursor, :id_familia, :url_antecedente, :desc_antecedente); END;', bindvars)
+            } else {
+              bindvar_check.desc_antecedente = bindvars.desc_antecedente
+              bindvar_check.url_antecedente = bindvars.url_antecedente
+              result = await database.executeProcedure('BEGIN UPDATEantecedente(:cursor, :id_antecedente, :id_familia, :url_antecedente, :desc_antecedente); END;', bindvar_check)
+            }
+            if (result && result.length > 0) {
+              res.json({ error: false, data: { antecedente: result[0] } })
+            } else {
+              res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+            }
+          } else {
+            res.status(400).json({ error: true, data: { message: 'Parámetros Inválidos' } })
+          }
+        }
       } else {
-        res.status(500).json({ error: true, data: { message: 'Error Interno' } })
+        res.status(400).json({ error: true, data: { message: 'El antecedente debe estar en formato pdf'} })
       }
-    } else {
-      res.status(400).json({ error: true, data: { message: 'Parámetros Inválidos' } })
-    }
+    })
   } catch (err) {
     res.status(500).json({ error: true, data: { message: err } })
   }
@@ -64,7 +96,6 @@ async function POST (req, res) {
  * Actualizar Antecedente
  * @param {integer} req.params.id - ID del antecedente.
  * @param {integer} req.body.ID_FAMILIA - ID de la familia asociada al antecedente. (Opcional)
- * @param {integer} req.body.URL_ANTECEDENTE - URL del antecedente (Ruta en el fichero). (Opcional)
  * @param {string} req.body.DESC_ANTECEDENTE - Descripción del antecedente. (Opcional)
  * @returns {json} - Objeto con el antecedente ingresado.
  */
@@ -76,7 +107,7 @@ async function PUT (req, res) {
         cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_antecedente: id_antecedente,
         id_familia: (typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA),
-        url_antecedente: (typeof req.body.URL_ANTECEDENTE !== 'string' || req.body.URL_ANTECEDENTE.trim().length === 0) ? undefined : req.body.URL_ANTECEDENTE.trim(),
+        url_antecedente: undefined,
         desc_antecedente: (typeof req.body.DESC_ANTECEDENTE !== 'string' || req.body.DESC_ANTECEDENTE.trim().length === 0) ? undefined : req.body.DESC_ANTECEDENTE.trim()
       }
       let result = await database.executeProcedure('BEGIN UPDATEantecedente(:cursor, :id_antecedente, :id_familia, :url_antecedente, :desc_antecedente); END;', bindvars)
@@ -105,6 +136,8 @@ async function DELETE (req, res) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_antecedente: id_antecedente }
       let result = await database.executeProcedure('BEGIN DELETEantecedente(:cursor, :id_antecedente); END;', bindvars)
       if (result && result.length > 0) {
+        let path = 'public' + result[0].URL_ANTECEDENTE
+        deleteFile(path)
         res.json({ error: false, data: { message: 'Antecedente Eliminado', antecedente: result[0] } })
       } else {
         res.status(404).json({ error: false, data: { message: 'No se encontró ningún antecedente' } })
