@@ -1,6 +1,7 @@
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
+import mime from 'mime-types'
 
 function generateUUID () { // Public Domain/MIT
   var d = new Date().getTime()
@@ -28,9 +29,8 @@ const storage = multer.diskStorage({
 
 const fileFilter = function (req, file, cb) {
   var filetypes = /pdf/
-  var mimetype = filetypes.test(file.mimetype)
+  var mimetype = mime.lookup(file.originalname)
   var extname = filetypes.test(path.extname(file.originalname).toLowerCase())
-  
   if (mimetype && extname) {
     return cb(null, true)
   }

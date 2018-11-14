@@ -46,6 +46,7 @@ function POST (req, res) {
         } else {
           let id_familia = (typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA)
           if (id_familia === undefined) {
+            deleteFile(req.file.path)
             res.status(400).json({ error: true, data: { message: 'Parámetros Inválidos' } })
             return
           }
@@ -77,9 +78,11 @@ function POST (req, res) {
             if (result && result.length > 0) {
               res.json({ error: false, data: { antecedente: result[0] } })
             } else {
+              deleteFile('public' + bindvars.url_antecedente)
               res.status(500).json({ error: true, data: { message: 'Error Interno' } })
             }
           } else {
+            deleteFile('public' + bindvars.url_antecedente)
             res.status(400).json({ error: true, data: { message: 'Parámetros Inválidos' } })
           }
         }
