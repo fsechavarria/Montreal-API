@@ -33,7 +33,6 @@ async function GET (req, res) {
 /**
  * Ingresar Inscripción
  * @param {integer} req.body.ID_PROGRAMA - ID del programa asociado a la inscripción.
- * @param {integer} req.body.ID_CURSO - ID del curso asociado a la inscripción.
  * @param {integer} req.body.ID_ALUMNO - ID del alumno al que pertenece la inscripción.
  * @returns {json} - Objeto con la inscripción ingresada.
  */
@@ -42,13 +41,12 @@ async function POST (req, res) {
     let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
       id_programa: (typeof req.body.ID_PROGRAMA === 'undefined' || isNaN(req.body.ID_PROGRAMA) || String(req.body.ID_PROGRAMA).trim().length === 0) ? undefined : parseInt(req.body.ID_PROGRAMA),
-      id_curso: (typeof req.body.ID_CURSO === 'undefined' || isNaN(req.body.ID_CURSO) || String(req.body.ID_CURSO).trim().length === 0) ? undefined : parseInt(req.body.ID_CURSO),
       id_alumno: (typeof req.body.ID_ALUMNO === 'undefined' || isNaN(req.body.ID_ALUMNO) || String(req.body.ID_ALUMNO).trim().length === 0) ? undefined : parseInt(req.body.ID_ALUMNO)
     }
-    if (bindvars.id_programa !== undefined && bindvars.id_curso !== undefined && bindvars.id_alumno !== undefined) {
-      let result = await database.executeProcedure('BEGIN INSERTinscripcion(:cursor, :id_programa, :id_curso, :id_alumno); END;', bindvars)
+    if (bindvars.id_programa !== undefined && bindvars.id_alumno !== undefined) {
+      let result = await database.executeProcedure('BEGIN INSERTinscripcion(:cursor, :id_programa, :id_alumno); END;', bindvars)
       if (result && result.length > 0) {
-        res.json({ error: false, data: { inscripcion: result[0] } })
+        res.json({ error: false, data: { inscripcion: result } })
       } else {
         res.status(500).json({ error: true, data: { message: 'Error Interno' } })
       }
