@@ -19,14 +19,14 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_persona: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-      id_direccion: (typeof req.query.id_direccion === 'undefined' || isNaN(req.query.id_direccion) || String(req.query.id_direccion).trim().length === 0) ? undefined : parseInt(req.query.id_direccion),
-      id_usuario: (typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) || String(req.query.id_usuario).trim().length === 0) ? undefined : parseInt(req.query.id_usuario),
-      rut: (typeof req.query.rut !== 'string' || req.query.rut.trim().length === 0 || !RutValidation(req.query.rut.trim())) ? undefined : RutValidation(req.query.rut.trim()),
-      nombre: (typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre.trim(),
-      app_paterno: (typeof req.query.app_paterno !== 'string' || req.query.app_paterno.trim().length === 0) ? undefined : req.query.app_paterno.trim(),
-      app_materno: (typeof req.query.app_materno !== 'string' || req.query.app_materno.trim().length === 0) ? undefined : req.query.app_materno.trim(),
-      fech_nacimiento: (typeof req.query.fech_nacimiento !== 'string' || req.query.fech_nacimiento.trim().length === 0 || !formatDate(req.query.fech_nacimiento.trim())) ? undefined : formatDate(req.query.fech_nacimiento.trim()),
+      id_persona: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+      id_direccion: (req.query.id_direccion === null || typeof req.query.id_direccion === 'undefined' || isNaN(req.query.id_direccion) || String(req.query.id_direccion).trim().length === 0) ? undefined : parseInt(req.query.id_direccion),
+      id_usuario: (req.query.id_usuario === null || typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) || String(req.query.id_usuario).trim().length === 0) ? undefined : parseInt(req.query.id_usuario),
+      rut: (req.query.rut === null || typeof req.query.rut !== 'string' || req.query.rut.trim().length === 0 || !RutValidation(req.query.rut.trim())) ? undefined : RutValidation(req.query.rut.trim()),
+      nombre: (req.query.nombre === null || typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre.trim(),
+      app_paterno: (req.query.app_materno === null || typeof req.query.app_paterno !== 'string' || req.query.app_paterno.trim().length === 0) ? undefined : req.query.app_paterno.trim(),
+      app_materno: (req.query.app_materno === null || typeof req.query.app_materno !== 'string' || req.query.app_materno.trim().length === 0) ? undefined : req.query.app_materno.trim(),
+      fech_nacimiento: (req.query.fech_nacimiento === null || typeof req.query.fech_nacimiento !== 'string' || req.query.fech_nacimiento.trim().length === 0 || !formatDate(req.query.fech_nacimiento.trim())) ? undefined : formatDate(req.query.fech_nacimiento.trim()),
     }
     if (typeof req.query.rut !== 'undefined' && typeof bindvars.rut === 'undefined') {
       res.status(400).json({ error: true, data: { message: 'Rut Inválido.' } })
@@ -59,13 +59,13 @@ async function POST (req, res) {
   try {
     let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_direccion: (typeof req.body.ID_DIRECCION === 'undefined' || isNaN(req.body.ID_DIRECCION) || String(req.body.ID_DIRECCION).trim().length === 0) ? undefined : parseInt(req.body.ID_DIRECCION),
-      id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
-      rut: (typeof req.body.RUT !== 'string' || req.body.RUT.trim().length === 0 || !RutValidation(req.body.RUT.trim())) ? undefined : RutValidation(req.body.RUT.trim()),
-      nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim(),
-      app_paterno: (typeof req.body.APP_PATERNO !== 'string' || req.body.APP_PATERNO.trim().length === 0) ? undefined : req.body.APP_PATERNO.trim(),
-      app_materno: (typeof req.body.APP_MATERNO !== 'string' || req.body.APP_MATERNO.trim().length === 0) ? undefined : req.body.APP_MATERNO.trim(),
-      fech_nacimiento: (typeof req.body.FECH_NACIMIENTO !== 'string' || req.body.FECH_NACIMIENTO.trim().length === 0 || !formatDate(req.body.FECH_NACIMIENTO.trim())) ? undefined : formatDate(req.body.FECH_NACIMIENTO.trim()),
+      id_direccion: (req.body.ID_DIRECCION === null || typeof req.body.ID_DIRECCION === 'undefined' || isNaN(req.body.ID_DIRECCION) || String(req.body.ID_DIRECCION).trim().length === 0) ? undefined : parseInt(req.body.ID_DIRECCION),
+      id_usuario: (req.body.ID_USUARIO === null || typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
+      rut: (req.body.RUT === null || typeof req.body.RUT !== 'string' || req.body.RUT.trim().length === 0 || !RutValidation(req.body.RUT.trim())) ? undefined : RutValidation(req.body.RUT.trim()),
+      nombre: (req.body.NOMBRE === null || typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim(),
+      app_paterno: (req.body.APP_PATERNO === null || typeof req.body.APP_PATERNO !== 'string' || req.body.APP_PATERNO.trim().length === 0) ? undefined : req.body.APP_PATERNO.trim(),
+      app_materno: (req.body.APP_MATERNO === null || typeof req.body.APP_MATERNO !== 'string' || req.body.APP_MATERNO.trim().length === 0) ? undefined : req.body.APP_MATERNO.trim(),
+      fech_nacimiento: (req.body.FECH_NACIMIENTO === null || typeof req.body.FECH_NACIMIENTO !== 'string' || req.body.FECH_NACIMIENTO.trim().length === 0 || !formatDate(req.body.FECH_NACIMIENTO.trim())) ? undefined : formatDate(req.body.FECH_NACIMIENTO.trim()),
     }
     if (typeof bindvars.rut === 'undefined') {
       res.status(400).json({ error: true, data: { message: 'Rut Inválido.' } })
@@ -101,20 +101,20 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_persona = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
+		const id_persona = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_persona != 0) {
       let bindvars = {
         cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_persona: id_persona,
-        id_direccion: (typeof req.body.ID_DIRECCION === 'undefined' || isNaN(req.body.ID_DIRECCION) || String(req.body.ID_DIRECCION).trim().length === 0) ? undefined : parseInt(req.body.ID_DIRECCION),
-        id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
-        rut: (typeof req.body.RUT !== 'string' || req.body.RUT.trim().length === 0 || !RutValidation(req.body.RUT.trim())) ? undefined : RutValidation(req.body.RUT.trim()),
-        nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim(),
-        app_paterno: (typeof req.body.APP_PATERNO !== 'string' || req.body.APP_PATERNO.trim().length === 0) ? undefined : req.body.APP_PATERNO.trim(),
-        app_materno: (typeof req.body.APP_MATERNO !== 'string' || req.body.APP_MATERNO.trim().length === 0) ? undefined : req.body.APP_MATERNO.trim(),
-        fech_nacimiento: (typeof req.body.FECH_NACIMIENTO !== 'string' || req.body.FECH_NACIMIENTO.trim().length === 0 || !formatDate(req.body.FECH_NACIMIENTO.trim())) ? undefined : formatDate(req.body.FECH_NACIMIENTO.trim()),
+        id_direccion: ( req.body.ID_DIRECCION === null || typeof req.body.ID_DIRECCION === 'undefined' || isNaN(req.body.ID_DIRECCION) || String(req.body.ID_DIRECCION).trim().length === 0) ? undefined : parseInt(req.body.ID_DIRECCION),
+        id_usuario: (req.body.ID_USUARIO === null || typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
+        rut: (req.body.RUT === null || typeof req.body.RUT !== 'string' || req.body.RUT.trim().length === 0 || !RutValidation(req.body.RUT.trim())) ? undefined : RutValidation(req.body.RUT.trim()),
+        nombre: (req.body.NOMBRE === null || typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim(),
+        app_paterno: (req.body.APP_PATERNO === null || typeof req.body.APP_PATERNO !== 'string' || req.body.APP_PATERNO.trim().length === 0) ? undefined : req.body.APP_PATERNO.trim(),
+        app_materno: (req.body.APP_MATERNO === null || typeof req.body.APP_MATERNO !== 'string' || req.body.APP_MATERNO.trim().length === 0) ? undefined : req.body.APP_MATERNO.trim(),
+        fech_nacimiento: (req.body.FECH_NACIMIENTO === null || typeof req.body.FECH_NACIMIENTO !== 'string' || req.body.FECH_NACIMIENTO.trim().length === 0 || !formatDate(req.body.FECH_NACIMIENTO.trim())) ? undefined : formatDate(req.body.FECH_NACIMIENTO.trim()),
       }
-      if (typeof req.query.rut !== 'undefined' && typeof bindvars.rut === 'undefined') {
+      if (req.query.rut !== null && typeof req.query.rut !== 'undefined' && typeof bindvars.rut === 'undefined') {
         res.status(400).json({ error: true, data: { message: 'Rut Inválido.' } })
         return
       }
@@ -139,7 +139,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_persona = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_persona = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_persona != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_persona: id_persona }
       let result = await database.executeProcedure('BEGIN DELETEpersona(:cursor, :id_persona); END;', bindvars)

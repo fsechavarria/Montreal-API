@@ -13,10 +13,10 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_familia: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-      id_usuario: (typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) || String(req.query.id_usuario).trim().length === 0) ? undefined : parseInt(req.query.id_usuario),
-      num_integrantes: (typeof req.query.num_integrantes === 'undefined' || isNaN(req.query.num_integrantes) || String(req.query.num_integrantes).trim().length === 0) ? undefined : parseInt(req.query.num_integrantes),
-      estado: (typeof req.query.estado !== 'string' || req.query.estado.trim().length === 0) ? undefined : req.query.estado.trim().toUpperCase()
+      id_familia: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+      id_usuario: (req.query.id_usuario === null || typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) || String(req.query.id_usuario).trim().length === 0) ? undefined : parseInt(req.query.id_usuario),
+      num_integrantes: (req.query.num_integrantes === null || typeof req.query.num_integrantes === 'undefined' || isNaN(req.query.num_integrantes) || String(req.query.num_integrantes).trim().length === 0) ? undefined : parseInt(req.query.num_integrantes),
+      estado: (req.query.estado === null || typeof req.query.estado !== 'string' || req.query.estado.trim().length === 0) ? undefined : req.query.estado.trim().toUpperCase()
 		}
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTfamilia(:cursor, :id_familia, :id_usuario, :num_integrantes, :estado); END;', bindvars)
@@ -41,9 +41,9 @@ async function POST (req, res) {
   try {
     let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
-      num_integrantes: (typeof req.body.NUM_INTEGRANTES === 'undefined' || isNaN(req.body.NUM_INTEGRANTES) || String(req.body.NUM_INTEGRANTES).trim().length === 0) ? undefined : parseInt(req.body.NUM_INTEGRANTES),
-      estado: (typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? 'A' : req.body.ESTADO.trim().toUpperCase()
+      id_usuario: (req.body.ID_USUARIO === null || typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
+      num_integrantes: (req.body.NUM_INTEGRANTES === null || typeof req.body.NUM_INTEGRANTES === 'undefined' || isNaN(req.body.NUM_INTEGRANTES) || String(req.body.NUM_INTEGRANTES).trim().length === 0) ? undefined : parseInt(req.body.NUM_INTEGRANTES),
+      estado: (req.body.ESTADO === null || typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? 'A' : req.body.ESTADO.trim().toUpperCase()
     }
     if (bindvars.estado !== 'A' && bindvars.estado !== 'I') {
       res.status(400).json({ error: true, data: { message: 'El estado debe ser Activo[A] o Inactivo[I]' } })
@@ -74,14 +74,14 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_familia = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
+		const id_familia = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_familia != 0) {
       let bindvars = {
 				cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
 				id_familia: id_familia,
-				id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
-        num_integrantes: (typeof req.body.NUM_INTEGRANTES === 'undefined' || isNaN(req.body.NUM_INTEGRANTES) || String(req.body.NUM_INTEGRANTES).trim().length === 0) ? undefined : parseInt(req.body.NUM_INTEGRANTES),
-        estado: (typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? undefined : req.body.ESTADO.trim().toUpperCase()
+				id_usuario: (req.body.ID_USUARIO === null || typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO),
+        num_integrantes: (req.body.NUM_INTEGRANTES === null || typeof req.body.NUM_INTEGRANTES === 'undefined' || isNaN(req.body.NUM_INTEGRANTES) || String(req.body.NUM_INTEGRANTES).trim().length === 0) ? undefined : parseInt(req.body.NUM_INTEGRANTES),
+        estado: (req.body.ESTADO === null || typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? undefined : req.body.ESTADO.trim().toUpperCase()
       }
       if (bindvars.estado !== undefined && bindvars.estado !== 'A' && bindvars.estado !== 'I') {
         res.status(400).json({ error: true, data: { message: 'El estado debe ser Activo[A] o Inactivo[I]' } })
@@ -108,7 +108,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_familia = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_familia = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_familia != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_familia: id_familia }
       let result = await database.executeProcedure('BEGIN DELETEfamilia(:cursor, :id_familia); END;', bindvars)

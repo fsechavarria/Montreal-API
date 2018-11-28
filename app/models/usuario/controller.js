@@ -13,9 +13,9 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_usuario: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-      id_rol: (typeof req.query.id_rol === 'undefined' || isNaN(req.query.id_rol) || String(req.query.id_rol).trim().length === 0) ? undefined : parseInt(req.query.id_rol),
-      usuario: (typeof req.query.usuario === 'undefined' || String(req.query.usuario).trim().length === 0) ? undefined : String(req.query.usuario).trim()
+      id_usuario: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+      id_rol: (req.query.id_rol === null || typeof req.query.id_rol === 'undefined' || isNaN(req.query.id_rol) || String(req.query.id_rol).trim().length === 0) ? undefined : parseInt(req.query.id_rol),
+      usuario: (req.query.usuario === null || typeof req.query.usuario === 'undefined' || String(req.query.usuario).trim().length === 0) ? undefined : String(req.query.usuario).trim()
 		}
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTusuario(:cursor, :id_usuario, :id_rol, :usuario); END;', bindvars)
@@ -40,9 +40,9 @@ async function POST (req, res) {
   try {
     let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_rol: (typeof req.body.ID_ROL === 'undefined' || isNaN(req.body.ID_ROL) || String(req.body.ID_ROL).trim().length === 0) ? undefined : parseInt(req.body.ID_ROL),
-      usuario: (typeof req.body.USUARIO === 'undefined' || String(req.body.USUARIO).trim().length === 0) ? undefined : String(req.body.USUARIO).trim(),
-      contrasena: (typeof req.body.CONTRASENA === 'undefined' || String(req.body.CONTRASENA).trim().length === 0) ? undefined : String(req.body.CONTRASENA).trim()
+      id_rol: (req.body.ID_ROL === null || typeof req.body.ID_ROL === 'undefined' || isNaN(req.body.ID_ROL) || String(req.body.ID_ROL).trim().length === 0) ? undefined : parseInt(req.body.ID_ROL),
+      usuario: (req.body.USUARIO === null || typeof req.body.USUARIO === 'undefined' || String(req.body.USUARIO).trim().length === 0) ? undefined : String(req.body.USUARIO).trim(),
+      contrasena: (req.body.CONTRASENA === null || typeof req.body.CONTRASENA === 'undefined' || String(req.body.CONTRASENA).trim().length === 0) ? undefined : String(req.body.CONTRASENA).trim()
     }
     if (bindvars.id_rol !== undefined && bindvars.usuario !== undefined && bindvars.contrasena !== undefined) {
       bindvars.contrasena = genHash(bindvars.contrasena)
@@ -70,14 +70,14 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_usuario = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
+		const id_usuario = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_usuario != 0) {
       let bindvars = {
         cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_usuario: id_usuario,
-        id_rol: (typeof req.body.ID_ROL === 'undefined' || isNaN(req.body.ID_ROL) || String(req.body.ID_ROL).trim().length === 0) ? undefined : parseInt(req.body.ID_ROL),
-        usuario: (typeof req.body.USUARIO === 'undefined' || String(req.body.USUARIO).trim().length === 0) ? undefined : String(req.body.USUARIO).trim(),
-        contrasena: (typeof req.body.CONTRASENA === 'undefined' || String(req.body.CONTRASENA).trim().length === 0) ? undefined : String(req.body.CONTRASENA).trim()
+        id_rol: (req.body.ID_ROL === null || typeof req.body.ID_ROL === 'undefined' || isNaN(req.body.ID_ROL) || String(req.body.ID_ROL).trim().length === 0) ? undefined : parseInt(req.body.ID_ROL),
+        usuario: (req.body.USUARIO === null || typeof req.body.USUARIO === 'undefined' || String(req.body.USUARIO).trim().length === 0) ? undefined : String(req.body.USUARIO).trim(),
+        contrasena: (req.body.CONTRASENA === null || typeof req.body.CONTRASENA === 'undefined' || String(req.body.CONTRASENA).trim().length === 0) ? undefined : String(req.body.CONTRASENA).trim()
       }
       if (typeof bindvars.contrasena !== 'undefined') bindvars.contrasena = genHash(bindvars.contrasena)
       let result = await database.executeProcedure('BEGIN UPDATEusuario(:cursor, :id_usuario, :id_rol, :usuario, :contrasena); END;', bindvars)
@@ -101,7 +101,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_usuario = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_usuario = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_usuario != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_usuario: id_usuario }
       let result = await database.executeProcedure('BEGIN DELETEusuario(:cursor, :id_usuario); END;', bindvars)

@@ -13,10 +13,10 @@ async function GET (req, res) {
   try {
     let bindvars = { 
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, 
-      id_contacto: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-      id_persona: (typeof req.query.id_persona === 'undefined' || isNaN(req.query.id_persona) || String(req.query.id_persona).trim().length === 0) ? undefined : parseInt(req.query.id_persona),
-      desc_contacto: (typeof req.query.desc_contacto !== 'string' || req.query.desc_contacto.trim().length === 0) ? undefined : req.query.desc_contacto.trim(),
-      tipo_contacto: (typeof req.query.tipo_contacto !== 'string' || req.query.tipo_contacto.trim().length === 0) ? undefined : req.query.tipo_contacto.trim()
+      id_contacto: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+      id_persona: (req.query.id_persona === null || typeof req.query.id_persona === 'undefined' || isNaN(req.query.id_persona) || String(req.query.id_persona).trim().length === 0) ? undefined : parseInt(req.query.id_persona),
+      desc_contacto: (req.query.desc_contacto === null || typeof req.query.desc_contacto !== 'string' || req.query.desc_contacto.trim().length === 0) ? undefined : req.query.desc_contacto.trim(),
+      tipo_contacto: (req.query.tipo_contacto === null || typeof req.query.tipo_contacto !== 'string' || req.query.tipo_contacto.trim().length === 0) ? undefined : req.query.tipo_contacto.trim()
     }
     let result = []
     result = await database.executeGETProcedure('BEGIN SELECTcontacto(:cursor, :id_contacto, :id_persona, :desc_contacto, :tipo_contacto); END;', bindvars)
@@ -41,9 +41,9 @@ async function POST (req, res) {
   try {
     let bindvars = { 
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_persona: (typeof req.body.ID_PERSONA === 'undefined' || isNaN(req.body.ID_PERSONA) || String(req.body.ID_PERSONA).trim().length === 0) ? undefined : req.body.ID_PERSONA,
-      desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO.trim(),
-      tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO.trim(),
+      id_persona: (req.body.ID_PERSONA === null || typeof req.body.ID_PERSONA === 'undefined' || isNaN(req.body.ID_PERSONA) || String(req.body.ID_PERSONA).trim().length === 0) ? undefined : req.body.ID_PERSONA,
+      desc_contacto: (req.body.DESC_CONTACTO === null || typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO.trim(),
+      tipo_contacto: (req.body.TIPO_CONTACTO === null || typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO.trim(),
     }
     if (bindvars.id_persona !== undefined && bindvars.desc_contacto !== undefined && bindvars.tipo_contacto !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTcontacto(:cursor, :id_persona, :desc_contacto, :tipo_contacto); END;', bindvars)
@@ -70,14 +70,14 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-    const id_contacto = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
+    const id_contacto = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_contacto != 0) {
       let bindvars = {
         cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_contacto: id_contacto,
-        id_persona: (typeof req.body.ID_PERSONA === 'undefined' || isNaN(req.body.ID_PERSONA) || String(req.body.ID_PERSONA).trim().length === 0) ? undefined : req.body.ID_PERSONA,
-        desc_contacto: (typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO.trim(),
-        tipo_contacto: (typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO.trim()
+        id_persona: (req.body.ID_PERSONA === null || typeof req.body.ID_PERSONA === 'undefined' || isNaN(req.body.ID_PERSONA) || String(req.body.ID_PERSONA).trim().length === 0) ? undefined : req.body.ID_PERSONA,
+        desc_contacto: (req.body.DESC_CONTACTO === null || typeof req.body.DESC_CONTACTO !== 'string' || req.body.DESC_CONTACTO.trim().length === 0 ) ? undefined : req.body.DESC_CONTACTO.trim(),
+        tipo_contacto: (req.body.TIPO_CONTACTO === null || typeof req.body.TIPO_CONTACTO !== 'string' || req.body.TIPO_CONTACTO.trim().length === 0 ) ? undefined : req.body.TIPO_CONTACTO.trim()
       }
       let result = await database.executeProcedure('BEGIN UPDATEcontacto(:cursor, :id_contacto, :id_persona, :desc_contacto, :tipo_contacto); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
@@ -100,7 +100,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
   try {
-    const id_contacto = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_contacto = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_contacto != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_contacto: id_contacto }
       let result = await database.executeProcedure('BEGIN DELETEcontacto(:cursor, :id_contacto); END;', bindvars)

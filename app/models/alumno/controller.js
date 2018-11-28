@@ -11,8 +11,8 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_alumno: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-      id_usuario: (typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) || String(req.query.id_usuario).trim().length === 0) ? undefined : parseInt(req.query.id_usuario)
+      id_alumno: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+      id_usuario: (req.query.id_usuario === null || typeof req.query.id_usuario === 'undefined' || isNaN(req.query.id_usuario) || String(req.query.id_usuario).trim().length === 0) ? undefined : parseInt(req.query.id_usuario)
     }
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTalumno(:cursor, :id_alumno, :id_usuario); END;', bindvars)
@@ -35,7 +35,7 @@ async function POST (req, res) {
   try {
     let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO)
+      id_usuario: (req.body.ID_USUARIO === null || typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO)
     }
     if (bindvars.id_usuario !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTalumno(:cursor, :id_usuario); END;', bindvars)
@@ -60,12 +60,12 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_alumno = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
+		const id_alumno = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_alumno != 0) {
       let bindvars = {
 				cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
 				id_alumno: id_alumno,
-				id_usuario: (typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO)
+				id_usuario: (req.body.ID_USUARIO === null || typeof req.body.ID_USUARIO === 'undefined' || isNaN(req.body.ID_USUARIO) || String(req.body.ID_USUARIO).trim().length === 0) ? undefined : parseInt(req.body.ID_USUARIO)
       }
       let result = await database.executeProcedure('BEGIN UPDATEalumno(:cursor, :id_alumno, :id_usuario); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
@@ -88,7 +88,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_alumno = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_alumno = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_alumno != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_alumno: id_alumno }
       let result = await database.executeProcedure('BEGIN DELETEalumno(:cursor, :id_alumno); END;', bindvars)

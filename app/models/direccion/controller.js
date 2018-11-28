@@ -14,11 +14,11 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_direccion: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-			id_ciudad: (typeof req.query.id_ciudad === 'undefined' || isNaN(req.query.id_ciudad) || String(req.query.id_ciudad).trim().length === 0) ? undefined : parseInt(req.query.id_ciudad),
-      calle: (typeof req.query.calle !== 'string' || req.query.calle.trim().length === 0) ? undefined : req.query.calle.trim(),
-      numeracion: (typeof req.query.numeracion === 'undefined' || String(req.query.numeracion).trim().length === 0) ? undefined : String(req.query.numeracion).trim(),
-      departamento: (typeof req.query.departamento === 'undefined' || String(req.query.departamento).trim().length === 0) ? undefined : String(req.query.departamento).trim()
+      id_direccion: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+			id_ciudad: (req.query.id_ciudad === null || typeof req.query.id_ciudad === 'undefined' || isNaN(req.query.id_ciudad) || String(req.query.id_ciudad).trim().length === 0) ? undefined : parseInt(req.query.id_ciudad),
+      calle: (req.query.calle === null || typeof req.query.calle !== 'string' || req.query.calle.trim().length === 0) ? undefined : req.query.calle.trim(),
+      numeracion: (req.query.numeracion === null || typeof req.query.numeracion === 'undefined' || String(req.query.numeracion).trim().length === 0) ? undefined : String(req.query.numeracion).trim(),
+      departamento: (req.query.departamento === null || typeof req.query.departamento === 'undefined' || String(req.query.departamento).trim().length === 0) ? undefined : String(req.query.departamento).trim()
     }
     let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTdireccion(:cursor, :id_direccion, :id_ciudad, :calle, :numeracion, :departamento); END;', bindvars)
@@ -44,10 +44,10 @@ async function POST (req, res) {
   try {
     let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-			id_ciudad: (typeof req.body.ID_CIUDAD === 'undefined' || isNaN(req.body.ID_CIUDAD) || String(req.body.ID_CIUDAD).trim().length === 0) ? undefined : parseInt(req.body.ID_CIUDAD),
-      calle: (typeof req.body.CALLE !== 'string' || req.body.CALLE.trim().length === 0) ? undefined : req.body.CALLE.trim(),
-      numeracion: (typeof req.body.NUMERACION === 'undefined' || String(req.body.NUMERACION).trim().length === 0) ? undefined : String(req.body.NUMERACION).trim(),
-      departamento: (typeof req.body.DEPARTAMENTO === 'undefined' || String(req.body.DEPARTAMENTO).trim().length === 0) ? undefined : String(req.body.DEPARTAMENTO).trim()
+			id_ciudad: (req.body.ID_CIUDAD === null || typeof req.body.ID_CIUDAD === 'undefined' || isNaN(req.body.ID_CIUDAD) || String(req.body.ID_CIUDAD).trim().length === 0) ? undefined : parseInt(req.body.ID_CIUDAD),
+      calle: (req.body.CALLE === null || typeof req.body.CALLE !== 'string' || req.body.CALLE.trim().length === 0) ? undefined : req.body.CALLE.trim(),
+      numeracion: (req.body.NUMERACION === null || typeof req.body.NUMERACION === 'undefined' || String(req.body.NUMERACION).trim().length === 0) ? undefined : String(req.body.NUMERACION).trim(),
+      departamento: (req.body.DEPARTAMENTO === null || typeof req.body.DEPARTAMENTO === 'undefined' || String(req.body.DEPARTAMENTO).trim().length === 0) ? undefined : String(req.body.DEPARTAMENTO).trim()
     }
     if (bindvars.id_ciudad !== undefined && bindvars.calle !== undefined && bindvars.numeracion !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTdireccion(:cursor, :id_ciudad, :calle, :numeracion, :departamento); END;', bindvars)
@@ -75,15 +75,15 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_direccion = (typeof req.params.id  === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+		const id_direccion = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_direccion != 0) {
       let bindvars = {
 				cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_direccion: id_direccion,
-        id_ciudad: (typeof req.body.ID_CIUDAD === 'undefined' || isNaN(req.body.ID_CIUDAD) || String(req.body.ID_CIUDAD).trim().length === 0) ? undefined : parseInt(req.body.ID_CIUDAD),
-        calle: (typeof req.body.CALLE !== 'string' || req.body.CALLE.trim().length === 0) ? undefined : req.body.CALLE.trim(),
-        numeracion: (typeof req.body.NUMERACION === 'undefined' || String(req.body.NUMERACION).trim().length === 0) ? undefined : String(req.body.NUMERACION).trim(),
-        departamento: (typeof req.body.DEPARTAMENTO === 'undefined' || String(req.body.DEPARTAMENTO).trim().length === 0) ? '' : String(req.body.DEPARTAMENTO).trim()
+        id_ciudad: (req.body.ID_CIUDAD === null || typeof req.body.ID_CIUDAD === 'undefined' || isNaN(req.body.ID_CIUDAD) || String(req.body.ID_CIUDAD).trim().length === 0) ? undefined : parseInt(req.body.ID_CIUDAD),
+        calle: (req.body.CALLE === null || typeof req.body.CALLE !== 'string' || req.body.CALLE.trim().length === 0) ? undefined : req.body.CALLE.trim(),
+        numeracion: (req.body.NUMERACION === null || typeof req.body.NUMERACION === 'undefined' || String(req.body.NUMERACION).trim().length === 0) ? undefined : String(req.body.NUMERACION).trim(),
+        departamento: (req.body.DEPARTAMENTO === null || typeof req.body.DEPARTAMENTO === 'undefined' || String(req.body.DEPARTAMENTO).trim().length === 0) ? '' : String(req.body.DEPARTAMENTO).trim()
       }
       let result = await database.executeProcedure('BEGIN UPDATEdireccion(:cursor, :id_direccion, :id_ciudad, :calle, :numeracion, :departamento); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
@@ -106,7 +106,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_direccion = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_direccion = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_direccion != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_direccion: id_direccion }
       let result = await database.executeProcedure('BEGIN DELETEdireccion(:cursor, :id_direccion); END;', bindvars)

@@ -11,8 +11,8 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-			id_pais: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-			nombre: (typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre.trim()
+			id_pais: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+			nombre: (req.query.nombre === null || typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre.trim()
 		}
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTpais(:cursor, :id_pais, :nombre); END;', bindvars)
@@ -35,7 +35,7 @@ async function POST (req, res) {
   try {
     let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-			nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
+			nombre: (req.body.NOMBRE === null || typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
 		}
     if (bindvars.nombre !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTpais(:cursor, :nombre); END;', bindvars)
@@ -60,12 +60,12 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_pais = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
+		const id_pais = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_pais != 0) {
       let bindvars = {
 				cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
 				id_pais: id_pais,
-				nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
+				nombre: (req.body.NOMBRE === null || typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
 			}
       let result = await database.executeProcedure('BEGIN UPDATEpais(:cursor, :id_pais, :nombre); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
@@ -88,7 +88,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_contacto = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_contacto = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_contacto != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_contacto: id_contacto }
       let result = await database.executeProcedure('BEGIN DELETEpais(:cursor, :id_contacto); END;', bindvars)

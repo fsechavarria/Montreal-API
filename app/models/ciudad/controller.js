@@ -12,9 +12,9 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_ciudad: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-			id_pais: (typeof req.query.id_pais === 'undefined' || isNaN(req.query.id_pais) || String(req.query.id_pais).trim().length === 0) ? undefined : parseInt(req.query.id_pais),
-			nombre: (typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre.trim()
+      id_ciudad: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+			id_pais: (req.query.id_pais === null || typeof req.query.id_pais === 'undefined' || isNaN(req.query.id_pais) || String(req.query.id_pais).trim().length === 0) ? undefined : parseInt(req.query.id_pais),
+			nombre: (req.query.nombre === null || typeof req.query.nombre !== 'string' || req.query.nombre.trim().length === 0) ? undefined : req.query.nombre.trim()
 		}
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTciudad(:cursor, :id_ciudad, :id_pais, :nombre); END;', bindvars)
@@ -38,8 +38,8 @@ async function POST (req, res) {
   try {
     let bindvars = {
       cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_pais: (typeof req.body.ID_PAIS === 'undefined' || isNaN(req.body.ID_PAIS) || String(req.body.ID_PAIS).trim().length === 0) ? undefined : req.body.ID_PAIS,
-      nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
+      id_pais: (req.body.ID_PAIS === null || typeof req.body.ID_PAIS === 'undefined' || isNaN(req.body.ID_PAIS) || String(req.body.ID_PAIS).trim().length === 0) ? undefined : req.body.ID_PAIS,
+      nombre: (req.body.NOMBRE === null || typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
 		}
     if (bindvars.nombre !== undefined && bindvars.id_pais !== undefined) {
       let result = await database.executeProcedure('BEGIN INSERTciudad(:cursor, :id_pais, :nombre); END;', bindvars)
@@ -65,13 +65,13 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_ciudad = (typeof req.params.id  === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+		const id_ciudad = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_ciudad != 0) {
       let bindvars = {
 				cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_ciudad: id_ciudad,
-        id_pais: (typeof req.body.ID_PAIS  === 'undefined' || isNaN(req.body.ID_PAIS) || String(req.body.ID_PAIS).trim().length === 0) ? undefined : parseInt(req.body.ID_PAIS),
-				nombre: (typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
+        id_pais: (req.body.ID_PAIS === null || typeof req.body.ID_PAIS  === 'undefined' || isNaN(req.body.ID_PAIS) || String(req.body.ID_PAIS).trim().length === 0) ? undefined : parseInt(req.body.ID_PAIS),
+				nombre: (req.body.NOMBRE === null || typeof req.body.NOMBRE !== 'string' || req.body.NOMBRE.trim().length === 0) ? undefined : req.body.NOMBRE.trim()
 			}
       let result = await database.executeProcedure('BEGIN UPDATEciudad(:cursor, :id_ciudad, :id_pais, :nombre); END;', bindvars)
       if (result && result.length > 0 && result.length === 1) {
@@ -94,7 +94,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_ciudad = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_ciudad = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_ciudad != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_ciudad: id_ciudad }
       let result = await database.executeProcedure('BEGIN DELETEciudad(:cursor, :id_ciudad); END;', bindvars)

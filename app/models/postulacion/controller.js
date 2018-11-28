@@ -19,15 +19,15 @@ async function GET (req, res) {
 	try {
 		let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_postulacion: (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
-      id_alumno: (typeof req.query.id_alumno === 'undefined' || isNaN(req.query.id_alumno) || String(req.query.id_alumno).trim().length === 0) ? undefined : parseInt(req.query.id_alumno),
-      id_familia: (typeof req.query.id_familia === 'undefined' || isNaN(req.query.id_familia) || String(req.query.id_familia).trim().length === 0) ? undefined : parseInt(req.query.id_familia),
-      id_seguro: (typeof req.query.id_seguro === 'undefined' || isNaN(req.query.id_seguro) || String(req.query.id_seguro).trim().length === 0) ? undefined : parseInt(req.query.id_seguro),
-      id_programa: (typeof req.query.id_programa === 'undefined' || isNaN(req.query.id_programa) || String(req.query.id_programa).trim().length === 0) ? undefined : parseInt(req.query.id_programa),
-      fech_postulacion: (typeof req.query.fech_postulacion !== 'string' || req.query.fech_postulacion.trim().length === 0 || !formatDate(req.query.fech_postulacion.trim())) ? undefined : formatDate(req.query.fech_postulacion.trim()),
-      fech_respuesta: (typeof req.query.fech_respuesta !== 'string' || req.query.fech_respuesta.trim().length === 0 || !formatDate(req.query.fech_respuesta.trim())) ? undefined : formatDate(req.query.fech_respuesta.trim()),
-      estado: (typeof req.query.estado !== 'string' || req.query.estado.trim().length === 0) ? undefined : req.query.estado.trim().toUpperCase(),
-      reserva_dinero_pasajes: (typeof req.query.reserva_dinero_pasajes === 'undefined' || isNaN(req.query.reserva_dinero_pasajes) || String(req.query.reserva_dinero_pasajes).trim().length === 0) ? undefined : parseInt(req.query.reserva_dinero_pasajes),
+      id_postulacion: (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? undefined : parseInt(req.params.id),
+      id_alumno: (req.query.id_alumno === null || typeof req.query.id_alumno === 'undefined' || isNaN(req.query.id_alumno) || String(req.query.id_alumno).trim().length === 0) ? undefined : parseInt(req.query.id_alumno),
+      id_familia: (req.query.id_familia === null || typeof req.query.id_familia === 'undefined' || isNaN(req.query.id_familia) || String(req.query.id_familia).trim().length === 0) ? undefined : parseInt(req.query.id_familia),
+      id_seguro: (req.query.id_seguro === null || typeof req.query.id_seguro === 'undefined' || isNaN(req.query.id_seguro) || String(req.query.id_seguro).trim().length === 0) ? undefined : parseInt(req.query.id_seguro),
+      id_programa: (req.query.id_programa === null || typeof req.query.id_programa === 'undefined' || isNaN(req.query.id_programa) || String(req.query.id_programa).trim().length === 0) ? undefined : parseInt(req.query.id_programa),
+      fech_postulacion: (req.query.fech_postulacion === null || typeof req.query.fech_postulacion !== 'string' || req.query.fech_postulacion.trim().length === 0 || !formatDate(req.query.fech_postulacion.trim())) ? undefined : formatDate(req.query.fech_postulacion.trim()),
+      fech_respuesta: (req.query.fech_respuesta === null || typeof req.query.fech_respuesta !== 'string' || req.query.fech_respuesta.trim().length === 0 || !formatDate(req.query.fech_respuesta.trim())) ? undefined : formatDate(req.query.fech_respuesta.trim()),
+      estado: (req.query.estado === null || typeof req.query.estado !== 'string' || req.query.estado.trim().length === 0) ? undefined : req.query.estado.trim().toUpperCase(),
+      reserva_dinero_pasajes: (req.query.reserva_dinero_pasajes === null || typeof req.query.reserva_dinero_pasajes === 'undefined' || isNaN(req.query.reserva_dinero_pasajes) || String(req.query.reserva_dinero_pasajes).trim().length === 0) ? undefined : parseInt(req.query.reserva_dinero_pasajes),
     }
 		let result = []
 		result = await database.executeGETProcedure('BEGIN SELECTpostulacion(:cursor, :id_postulacion, :id_alumno, :id_familia, :id_seguro, :id_programa, :fech_postulacion, :fech_respuesta, :estado, :reserva_dinero_pasajes); END;', bindvars)
@@ -57,14 +57,14 @@ async function POST (req, res) {
   try {
     let bindvars = {
 			cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
-      id_alumno: (typeof req.body.ID_ALUMNO === 'undefined' || isNaN(req.body.ID_ALUMNO) || String(req.body.ID_ALUMNO).trim().length === 0) ? undefined : parseInt(req.body.ID_ALUMNO),
-      id_familia: (typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA),
-      id_seguro: (typeof req.body.ID_SEGURO === 'undefined' || isNaN(req.body.ID_SEGURO) || String(req.body.ID_SEGURO).trim().length === 0) ? undefined : parseInt(req.body.ID_SEGURO),
-      id_programa: (typeof req.body.ID_PROGRAMA === 'undefined' || isNaN(req.body.ID_PROGRAMA) || String(req.body.ID_PROGRAMA).trim().length === 0) ? undefined : parseInt(req.body.ID_PROGRAMA),
-      fech_postulacion: (typeof req.body.FECH_POSTULACION !== 'string' || req.body.FECH_POSTULACION.trim().length === 0 || !formatDate(req.body.FECH_POSTULACION.trim())) ? formatDate(new Date()) : formatDate(req.body.FECH_POSTULACION.trim()),
-      fech_respuesta: (typeof req.body.FECH_RESPUESTA !== 'string' || req.body.FECH_RESPUESTA.trim().length === 0 || !formatDate(req.body.FECH_RESPUESTA.trim())) ? undefined : formatDate(req.body.FECH_RESPUESTA.trim()),
-      estado: (typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? 'P' : req.body.ESTADO.trim().toUpperCase(),
-      reserva_dinero_pasajes: (typeof req.body.RESERVA_DINERO_PASAJES === 'undefined' || isNaN(req.body.RESERVA_DINERO_PASAJES) || String(req.body.RESERVA_DINERO_PASAJES).trim().length === 0) ? undefined : parseInt(req.body.RESERVA_DINERO_PASAJES),
+      id_alumno: (req.body.ID_ALUMNO === null || typeof req.body.ID_ALUMNO === 'undefined' || isNaN(req.body.ID_ALUMNO) || String(req.body.ID_ALUMNO).trim().length === 0) ? undefined : parseInt(req.body.ID_ALUMNO),
+      id_familia: (req.body.ID_FAMILIA === null || typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA),
+      id_seguro: (req.body.ID_SEGURO === null || typeof req.body.ID_SEGURO === 'undefined' || isNaN(req.body.ID_SEGURO) || String(req.body.ID_SEGURO).trim().length === 0) ? undefined : parseInt(req.body.ID_SEGURO),
+      id_programa: (req.body.ID_PROGRAMA === null || typeof req.body.ID_PROGRAMA === 'undefined' || isNaN(req.body.ID_PROGRAMA) || String(req.body.ID_PROGRAMA).trim().length === 0) ? undefined : parseInt(req.body.ID_PROGRAMA),
+      fech_postulacion: (req.body.FECH_POSTULACION === null || typeof req.body.FECH_POSTULACION !== 'string' || req.body.FECH_POSTULACION.trim().length === 0 || !formatDate(req.body.FECH_POSTULACION.trim())) ? formatDate(new Date()) : formatDate(req.body.FECH_POSTULACION.trim()),
+      fech_respuesta: (req.body.FECH_RESPUESTA === null || typeof req.body.FECH_RESPUESTA !== 'string' || req.body.FECH_RESPUESTA.trim().length === 0 || !formatDate(req.body.FECH_RESPUESTA.trim())) ? undefined : formatDate(req.body.FECH_RESPUESTA.trim()),
+      estado: (req.body.ESTADO === null || typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? 'P' : req.body.ESTADO.trim().toUpperCase(),
+      reserva_dinero_pasajes: (req.body.RESERVA_DINERO_PASAJES === null || typeof req.body.RESERVA_DINERO_PASAJES === 'undefined' || isNaN(req.body.RESERVA_DINERO_PASAJES) || String(req.body.RESERVA_DINERO_PASAJES).trim().length === 0) ? undefined : parseInt(req.body.RESERVA_DINERO_PASAJES),
     }
     if (bindvars.estado !== 'A' && bindvars.estado !== 'R' && bindvars.estado !== 'P') {
       res.status(400).json({ error: true, data: { message: 'El estado debe ser Activo[A], Inactivo[I] o Pendiente[P]' } })
@@ -99,19 +99,19 @@ async function POST (req, res) {
  */
 async function PUT (req, res) {
   try {
-		const id_postulacion = (typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
+		const id_postulacion = (req.params.id === null || typeof req.params.id  === 'undefined' || isNaN(req.params.id ) ) ? 0 : parseInt(req.params.id)
     if (id_postulacion != 0) {
       let bindvars = {
         cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT },
         id_postulacion: id_postulacion,
-        id_alumno: (typeof req.body.ID_ALUMNO === 'undefined' || isNaN(req.body.ID_ALUMNO) || String(req.body.ID_ALUMNO).trim().length === 0) ? undefined : parseInt(req.body.ID_ALUMNO),
-        id_familia: (typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA),
-        id_seguro: (typeof req.body.ID_SEGURO === 'undefined' || isNaN(req.body.ID_SEGURO) || String(req.body.ID_SEGURO).trim().length === 0) ? undefined : parseInt(req.body.ID_SEGURO),
-        id_programa: (typeof req.body.ID_PROGRAMA === 'undefined' || isNaN(req.body.ID_PROGRAMA) || String(req.body.ID_PROGRAMA).trim().length === 0) ? undefined : parseInt(req.body.ID_PROGRAMA),
-        fech_postulacion: (typeof req.body.FECH_POSTULACION !== 'string' || req.body.FECH_POSTULACION.trim().length === 0 || !formatDate(req.body.FECH_POSTULACION.trim())) ? formatDate(new Date()) : formatDate(req.body.FECH_POSTULACION.trim()),
-        fech_respuesta: (typeof req.body.FECH_RESPUESTA !== 'string' || req.body.FECH_RESPUESTA.trim().length === 0 || !formatDate(req.body.FECH_RESPUESTA.trim())) ? undefined : formatDate(req.body.FECH_RESPUESTA.trim()),
-        estado: (typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? undefined : req.body.ESTADO.trim().toUpperCase(),
-        reserva_dinero_pasajes: (typeof req.body.RESERVA_DINERO_PASAJES === 'undefined' || isNaN(req.body.RESERVA_DINERO_PASAJES) || String(req.body.RESERVA_DINERO_PASAJES).trim().length === 0) ? undefined : parseInt(req.body.RESERVA_DINERO_PASAJES),
+        id_alumno: (req.body.ID_ALUMNO === null || typeof req.body.ID_ALUMNO === 'undefined' || isNaN(req.body.ID_ALUMNO) || String(req.body.ID_ALUMNO).trim().length === 0) ? undefined : parseInt(req.body.ID_ALUMNO),
+        id_familia: (req.body.ID_FAMILIA === null || typeof req.body.ID_FAMILIA === 'undefined' || isNaN(req.body.ID_FAMILIA) || String(req.body.ID_FAMILIA).trim().length === 0) ? undefined : parseInt(req.body.ID_FAMILIA),
+        id_seguro: (req.body.ID_SEGURO === null || typeof req.body.ID_SEGURO === 'undefined' || isNaN(req.body.ID_SEGURO) || String(req.body.ID_SEGURO).trim().length === 0) ? undefined : parseInt(req.body.ID_SEGURO),
+        id_programa: (req.body.ID_PROGRAMA === null || typeof req.body.ID_PROGRAMA === 'undefined' || isNaN(req.body.ID_PROGRAMA) || String(req.body.ID_PROGRAMA).trim().length === 0) ? undefined : parseInt(req.body.ID_PROGRAMA),
+        fech_postulacion: (req.body.FECH_POSTULACION === null || typeof req.body.FECH_POSTULACION !== 'string' || req.body.FECH_POSTULACION.trim().length === 0 || !formatDate(req.body.FECH_POSTULACION.trim())) ? formatDate(new Date()) : formatDate(req.body.FECH_POSTULACION.trim()),
+        fech_respuesta: (req.body.FECH_RESPUESTA === null || typeof req.body.FECH_RESPUESTA !== 'string' || req.body.FECH_RESPUESTA.trim().length === 0 || !formatDate(req.body.FECH_RESPUESTA.trim())) ? undefined : formatDate(req.body.FECH_RESPUESTA.trim()),
+        estado: (req.body.ESTADO === null || typeof req.body.ESTADO !== 'string' || req.body.ESTADO.trim().length === 0) ? undefined : req.body.ESTADO.trim().toUpperCase(),
+        reserva_dinero_pasajes: (req.body.RESERVA_DINERO_PASAJES === null || typeof req.body.RESERVA_DINERO_PASAJES === 'undefined' || isNaN(req.body.RESERVA_DINERO_PASAJES) || String(req.body.RESERVA_DINERO_PASAJES).trim().length === 0) ? undefined : parseInt(req.body.RESERVA_DINERO_PASAJES),
       }
       if (bindvars.estado !== undefined && bindvars.estado !== 'A' && bindvars.estado !== 'R' && bindvars.estado !== 'P') {
         res.status(400).json({ error: true, data: { message: 'El estado debe ser Activo[A], Inactivo[I] o Pendiente[P]' } })
@@ -138,7 +138,7 @@ async function PUT (req, res) {
  */
 async function DELETE (req, res) {
 	try {
-    const id_postulacion = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+    const id_postulacion = (req.params.id === null || typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
     if (id_postulacion != 0) {
       let bindvars = { cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }, id_postulacion: id_postulacion }
       let result = await database.executeProcedure('BEGIN DELETEpostulacion(:cursor, :id_postulacion); END;', bindvars)
